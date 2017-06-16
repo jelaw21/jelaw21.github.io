@@ -1,0 +1,30 @@
+img {
+	display: block;
+	height: 100px;
+	width: 300px;
+	margin: auto;
+}
+
+p {
+	text-align: center;
+	font-family: Garamond, serif;
+	font-size: 18px;
+}
+
+/*Start adding your CSS below!*/
+div{
+    height: 50px;
+    width: 120px;
+    border-radius: 5px;
+    border-color: #ff4d4d;
+    background-color: #4d0000;
+    margin: auto;
+    text-align: center;
+}
+
+a{
+    text-decoration: none;
+    color: #e60000;
+    font-family: Rockwell, Helvetica, serif;
+    font-size: 18px;
+}
