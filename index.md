@@ -4,7 +4,7 @@ Computer Science 2 is a course devoted to HTML, CSS and Javascript to create **D
 
 
 [Defeat of Thy Goombas: Michael Burks](https://jelaw21.github.io/exterminate/Game.html)
-[The Black Knight: Joshua Moser](https://jelaw21.github.io/black knight/Game.html)
+[The Black Knight: Joshua Moser](https://jelaw21.github.io/black_knight/Game.html)
 
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
