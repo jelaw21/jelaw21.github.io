@@ -1,8 +1,11 @@
-## Welcome to GitHub Pages
+## Welcome to Computer Science 2
 
-You can use the [editor on GitHub](https://github.com/jelaw21/jelaw21.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+Computer Science 2 is a course devoted to HTML, CSS and Javascript to create **DYNAMIC** webpages using the basic concepts of programming. The student work highlighted below are examples of what we will be accomplishing in this class.
 
-[Exterminate](https://jelaw21.github.io/exterminate/Game.html)
+
+[Defeat of Thy Goombas: Michael Burks](https://jelaw21.github.io/exterminate/Game.html)
+[The Black Knight: Joshua Moser](https://jelaw21.github.io/black knight/Game.html)
+
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
