@@ -9,6 +9,8 @@ Computer Science 2 is a course devoted to HTML, CSS and Javascript to create **D
 
 [CodeAcademy Test](https://jelaw21.github.io/button.html)
 
+[Profile Test](https://jelaw21.github.io/aboutme.html)
+
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
