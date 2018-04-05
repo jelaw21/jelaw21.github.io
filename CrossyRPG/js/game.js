@@ -22,10 +22,10 @@
  //load asset files for our game
  gameScene.preload = function(){
      
-     this.load.image('background', '/assets/background.png');
-     this.load.image('player', '/assets/player.png');
-     this.load.image('dragon', '/assets/dragon.png');
-     this.load.image('treasure', '/assets/treasure.png');
+     this.load.image('background', 'CrossyRPG/assets/background.png');
+     this.load.image('player', 'CrossyRPG/assets/player.png');
+     this.load.image('dragon', 'CrossyRPG/assets/dragon.png');
+     this.load.image('treasure', 'CrossyRPG/assets/treasure.png');
  };
  //draw
  gameScene.create = function(){
