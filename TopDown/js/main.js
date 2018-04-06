@@ -58,7 +58,7 @@ function update(){
     game.physics.arcade.overlap(sprite, coins, collectCoin, null, this);
 
     sprite.body.velocity.x = 0;
-    sprite.velocity.y = 0;
+    sprite.body.velocity.y = 0;
 
     if(cursors.left.isDown){
         sprite.body.x += 1;
