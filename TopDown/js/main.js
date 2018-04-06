@@ -21,10 +21,10 @@ var sprite;
 
 function create(){
 
-    scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    scale.pageAlignHorizontally = true;
-    scale.pageAlignVertically = true;
-    
+    game.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.pageAlignHorizontally = true;
+    game.pageAlignVertically = true;
+
     map = game.add.tilemap('map');
 
     map.addTilesetImage('tiles');
