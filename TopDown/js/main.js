@@ -21,9 +21,9 @@ var sprite;
 
 function create(){
 
-    game.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    game.pageAlignHorizontally = true;
-    game.pageAlignVertically = true;
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.pageAlignHorizontally = true;
+    game.scale.pageAlignVertically = true;
 
     map = game.add.tilemap('map');
 
