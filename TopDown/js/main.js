@@ -15,6 +15,7 @@ var cursors;
 var walk;
 
 var layer;
+var blockedLayer;
 var sprite;
 
 
@@ -24,12 +25,11 @@ function create(){
 
     map.addTilesetImage('tiles');
 
-    map.setCollisionBetween(1, 100);
-
     layer = map.createLayer('backgroundLayer');
     layer.resizeWorld();
 
-    map.createLayer('blockedLayer');
+    blockedLayer = map.createLayer('blockedLayer');
+    blockedLayer.setCollisionBetween(1,2000);
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -56,7 +56,7 @@ function create(){
 
 function update(){
 
-    game.physics.arcade.collide(sprite, layer);
+    game.physics.arcade.collide(sprite, blockedLayer);
     game.physics.arcade.overlap(sprite, coins, collectCoin, null, this);
 
     sprite.body.velocity.x = 0;
