@@ -25,8 +25,9 @@ function create(){
 
     map.addTilesetImage('tiles');
 
-    blockedLayer = map.createLayer('blockedLayer');
+
     layer = map.createLayer('backgroundLayer');
+    blockedLayer = map.createLayer('blockedLayer');
     layer.resizeWorld();
 
     map.setCollisionBetween(1,2000, true, 'blockedLayer');
