@@ -35,7 +35,7 @@ TopDown.Game.prototype  = {
     findObjectsByType: function(type, map, layer){
         var result = [];
         map.objects[layer].forEach(function(element){
-            if(element.properties.Type === type){
+            if(element.type === type){
                 element.y -= map.tileHeight;
                 result.push(element);
             }
