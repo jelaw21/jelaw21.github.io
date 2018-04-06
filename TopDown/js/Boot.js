@@ -6,7 +6,7 @@ TopDown.Boot.prototype = {
 
     preload: function(){
 
-        this.load.image('preloadbar', '/assets/images/preloader-bar.png');
+        this.load.image('preloadbar', 'assets/images/preloader-bar.png');
 
     },
 
