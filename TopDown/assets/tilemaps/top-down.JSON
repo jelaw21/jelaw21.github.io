@@ -52,9 +52,7 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"sprite",
-                         "type":"string",
-                         "value":"coin"
+                         "sprite":"coin"
                         }],
                  "rotation":0,
                  "type":"item",
@@ -70,9 +68,7 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"sprite",
-                         "type":"string",
-                         "value":"coin"
+                         "sprite":"coin"
                         }],
                  "rotation":0,
                  "type":"item",
@@ -88,9 +84,7 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"sprite",
-                         "type":"string",
-                         "value":"coin"
+                         "sprite":"coin"
                         }],
                  "rotation":0,
                  "type":"item",
@@ -124,9 +118,7 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"sprite",
-                         "type":"string",
-                         "value":"chest"
+                         "sprite":"chest"
                         }],
                  "rotation":0,
                  "type":"item",
