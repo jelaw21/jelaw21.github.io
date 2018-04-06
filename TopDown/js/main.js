@@ -21,6 +21,10 @@ var sprite;
 
 function create(){
 
+    scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    scale.pageAlignHorizontally = true;
+    scale.pageAlignVertically = true;
+    
     map = game.add.tilemap('map');
 
     map.addTilesetImage('tiles');
@@ -28,10 +32,10 @@ function create(){
 
     layer = map.createLayer('backgroundLayer');
     blockedLayer = map.createLayer('blockedLayer');
+
+
+    map.setCollisionBetween(1,3520, true, 'blockedLayer');
     layer.resizeWorld();
-
-    map.setCollisionBetween(1,2000, true, 'blockedLayer');
-
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
