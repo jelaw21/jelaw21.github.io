@@ -24,12 +24,13 @@ function create(){
     map = game.add.tilemap('map');
 
     map.addTilesetImage('tiles');
-
+    map.setCollisionBetween(1,2000,'blockedLayer');
+    
     layer = map.createLayer('backgroundLayer');
     layer.resizeWorld();
 
     blockedLayer = map.createLayer('blockedLayer');
-    map.setCollisionBetween(1,2000,'blockedLayer');
+
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
