@@ -12,6 +12,13 @@ TopDown.Preload.prototype = {
 
         //load game assets
         this.load.tilemap('level1', 'assets/tilemaps/top-down.JSON', null, Phaser.Tilemap.TILED_JSON);
+        this.load.image('gameTiles', 'assets/images/tiles.png');
+        this.load.spritesheet('player', 'assets/images/charMovement.png', 16, 16);
+        this.load.image('chest','assets/images/chest.png');
+        this.load.image('coin', 'assets/images/coin.png');
+        this.load.image('goldDoor', 'assets/images/goldDoor.png');
+        this.load.image('key', 'assets/images/key.png');
+        this.load.image('sign', 'assets/images/signPost.png');
 
     },
     create: function(){
