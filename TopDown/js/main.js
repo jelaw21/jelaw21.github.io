@@ -63,10 +63,10 @@ function update(){
     sprite.body.velocity.y = 0;
 
     if(cursors.left.isDown){
-        sprite.body.x += 1;
+        sprite.body.x -= 1;
         sprite.animations.play('walk', 60, true);
     }else if(cursors.right.isDown){
-        sprite.body.x -= 1;
+        sprite.body.x += 1;
     }
     if(cursors.left.isUp){
         sprite.animations.stop('walk', true);
