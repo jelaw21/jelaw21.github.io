@@ -24,8 +24,8 @@ function create(){
     map = game.add.tilemap('map');
 
     map.addTilesetImage('tiles');
-    map.setCollisionBetween(1,2000,'blockedLayer');
-    
+    map.setCollisionBetween(1,2000, true, 'blockedLayer');
+
     layer = map.createLayer('backgroundLayer');
     layer.resizeWorld();
 
