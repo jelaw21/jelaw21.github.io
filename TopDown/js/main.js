@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, "", {preload:preload, create: create, update:update, render: render});
+var game = new Phaser.Game(200, 150, Phaser.CANVAS, "", {preload:preload, create: create, update:update, render: render});
 
 function preload(){
 
@@ -32,9 +32,7 @@ function create(){
 
     layer = map.createLayer('backgroundLayer');
     blockedLayer = map.createLayer('blockedLayer');
-
-
-    map.setCollisionBetween(1,3520, true, 'blockedLayer');
+    map.setCollisionBetween(1, 3520, true, 'blockedLayer');
     layer.resizeWorld();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
