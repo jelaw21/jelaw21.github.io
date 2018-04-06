@@ -34,7 +34,7 @@ function create(){
     coins = game.add.group();
     coins.enableBody = true;
 
-    map.createFromObjects('objectLayer', 2, 'coin', 0,true,false, coins, null, true);
+    map.createFromObjects('objectLayer', 2, 'coin', 0,true,false, coins);
 
 
     sprite = game.add.sprite(31, 289, 'player');
@@ -44,7 +44,7 @@ function create(){
 
     game.physics.arcade.enable(sprite);
 
-    sprite.body.setSize(32,32,0,0);
+    sprite.body.setSize(16,16,0,0);
 
     game.camera.follow(sprite);
 
@@ -62,6 +62,7 @@ function update(){
 
     if(cursors.left.isDown){
         sprite.body.x += 1;
+        sprite.animations.play('walk', 30, true);
     }
     else if(cursors.right.isDown){
         sprite.body.x -= 1;
