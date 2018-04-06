@@ -29,7 +29,7 @@ function create(){
     layer = map.createLayer('backgroundLayer');
     layer.resizeWorld();
 
-    map.createLayer('objectLayer');
+    map.createLayer('blockedLayer');
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -65,13 +65,13 @@ function update(){
     if(cursors.left.isDown){
         sprite.body.x += 1;
         sprite.animations.play('walk', 60, true);
+    }else if(cursors.right.isDown){
+        sprite.body.x -= 1;
     }
     if(cursors.left.isUp){
         sprite.animations.stop('walk', true);
     }
-    else if(cursors.right.isDown){
-        sprite.body.x -= 1;
-    }
+
     if(cursors.up.isDown){
         sprite.body.y -= 1;
     }
