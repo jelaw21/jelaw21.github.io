@@ -29,6 +29,8 @@ function create(){
     layer = map.createLayer('backgroundLayer');
     layer.resizeWorld();
 
+    map.createLayer('objectLayer');
+
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     coins = game.add.group();
@@ -62,7 +64,10 @@ function update(){
 
     if(cursors.left.isDown){
         sprite.body.x += 1;
-        sprite.animations.play('walk', 30, true);
+        sprite.animations.play('walk', 60, true);
+    }
+    if(cursors.left.isUp){
+        sprite.animations.stop('walk', true);
     }
     else if(cursors.right.isDown){
         sprite.body.x -= 1;
