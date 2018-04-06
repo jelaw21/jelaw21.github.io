@@ -37,7 +37,7 @@ function create(){
     coins = game.add.group();
     coins.enableBody = true;
 
-    map.createFromObjects('objectLayer', 2, 'coin', 0,true,false, coins);
+    map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, coins);
 
 
     sprite = game.add.sprite(31, 289, 'player');
