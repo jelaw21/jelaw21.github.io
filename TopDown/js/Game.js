@@ -20,6 +20,33 @@ TopDown.Game.prototype  = {
 
         this.backgroundLayer.resizeWorld();
 
-    }
+        this.createItems();
 
+    },
+    createItems: function(){
+        this.items = this.game.add.group();
+        this.items.enableBody = true;
+        var item;
+        result = this.findObjectsByType('item', this.map, 'objectLayer');
+        result.forEach(function(element){
+            this.createFromTiledObject(element, this.items);
+        }, this);
+    },
+    findObjectsByType: function(type, map, layer){
+        var result = [];
+        map.objects[layer].forEach(function(element){
+            if(element.properties.type === type){
+                element.y -= map.tileHeight;
+                result.push(element);
+            }
+        });
+        return result;
+    },
+    createFromTiledObject: function(element, group){
+        var sprite = group.create(element.x, element.y, element.properties.sprite);
+
+        Object.keys(element.properties).forEach(function(key){
+            sprite[key] = element.properties[key];
+        });
+    }
 };
