@@ -36,7 +36,7 @@ function create(){
 
     map.createFromObjects('objectLayer', 2, 'coin', 0,true,false, coins, null, true);
 
-    sprite.game.add.sprite(map.getAsset('playerStart', 8).x, map.getAsset('playerStart', 8).y, 'player');
+    sprite = game.add.sprite(map.getAsset('playerStart', 8).x, map.getAsset('playerStart', 8).y, 'player');
     sprite.anchor.set(0.5);
 
     walk = sprite.animations.add('walk');
