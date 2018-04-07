@@ -112,7 +112,7 @@ function collectCoin(player, item){
         //item.body.immovable = true;
         item.body.moves = false;
         textSprite = game.add.sprite(game.width/2,game.height/2,'sign');
-        textSprite.setScale(4);
+        textSprite.scale.setTo(4, 4);
         console.log('SIGN');
     }
 }
