@@ -5,6 +5,10 @@ function preload(){
     game.load.tilemap('map', 'assets/tilemaps/top-down-test.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'assets/images/tiles.png');
     game.load.image('coin', 'assets/images/coin.png');
+    game.load.image('chest','assets/images/coin.png');
+    game.load.image('gDoor', 'assets/images/goldDoor.png');
+    game.load.image('key', 'assets/images/key.png');
+    game.load.image('sign', 'assets/images/signPost.png');
     game.load.spritesheet('player', 'assets/images/charMovement.png', 16, 15);
 
 }
@@ -17,6 +21,8 @@ var walk;
 var layer;
 var blocked;
 var player;
+var sign;
+var level1Key = false;
 
 
 function create(){
@@ -31,7 +37,7 @@ function create(){
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    //layer = map.createLayer('backgroundLayer');
+    layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
     map.setCollisionBetween(574, 576, true, blocked);
     blocked.resizeWorld();
@@ -41,9 +47,10 @@ function create(){
     coins = game.add.group();
     coins.enableBody = true;
 
-    for(var i = 0; i < 3520; i++){
-        map.createFromObjects('objectLayer', i, 'coin', 0,true,false, coins);
-    }
+
+    map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, coins);
+    sign = map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, null, null, true);
+
 
 
 
