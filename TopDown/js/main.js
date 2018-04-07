@@ -48,7 +48,7 @@ function create(){
 
 
     map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, coins);
-    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, Phaser.World, Phaser.Sprite, true);
+    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false);
 
 
 
