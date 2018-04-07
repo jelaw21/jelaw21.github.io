@@ -71,7 +71,7 @@ function create(){
 function update(){
 
     game.physics.arcade.collide(player, blocked);
-    game.physics.arcade.collide(player, coins, null, collectCoin, this);
+    game.physics.arcade.collide(player, items, null, collectCoin, this);
 
     if(cursors.left.isDown){
         player.body.velocity.x = -50;
