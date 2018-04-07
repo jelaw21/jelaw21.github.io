@@ -51,7 +51,7 @@ function create(){
 
     walk = player.animations.add('walk');
 
-    game.physics.arcade.enable(sprite);
+    game.physics.arcade.enable(player);
 
     player.body.setSize(16,16, 0, 0);
 
@@ -80,10 +80,10 @@ function update(){
     }
 
     if(cursors.up.isDown){
-        sprite.body.y -= 1;
+        player.body.y -= 1;
     }
     else if(cursors.down.isDown){
-        sprite.body.y += 1;
+        player.body.y += 1;
     }
 }
 
