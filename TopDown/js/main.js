@@ -17,7 +17,7 @@ var map;
 var items;
 var cursors;
 var walk;
-
+var objects;
 var layer;
 var blocked;
 var player;
@@ -49,8 +49,8 @@ function create(){
     //items.enableBody = true;
 
 
-    //map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
-    //map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, items);
+    map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
+    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, items);
 
 
 
