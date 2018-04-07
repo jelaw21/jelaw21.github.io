@@ -74,6 +74,7 @@ function update(){
         player.body.x -= 1;
     }else if(cursors.right.isDown){
         player.body.x += 1;
+        player.imgAngle = 180;
         player.animations.play('walk', 30, true);
     }
     if(cursors.right.isUp){
