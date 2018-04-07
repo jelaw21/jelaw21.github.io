@@ -39,6 +39,8 @@ function create(){
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
     map.setCollisionBetween(574, 576, true, blocked);
+
+    map.setTileIndexCallback(2096, collectCoin, this);
     blocked.resizeWorld();
 
 
@@ -71,7 +73,7 @@ function create(){
 function update(){
 
     game.physics.arcade.collide(player, blocked);
-    game.physics.arcade.collide(player, items, null, collectCoin, this);
+    //game.physics.arcade.collide(player, items, null, collectCoin, this);
 
     if(cursors.left.isDown){
         player.body.velocity.x = -50;
@@ -100,14 +102,10 @@ function update(){
     }
 }
 
-function collectCoin(player, item){
-   if(item.key === 'coin'){
-       item.kill();
-   }
-   if(item.key === 'sign'){
-       item.enableBody = false;
-       return true;
-   }
+function collectCoin(sprite, tile){
+   tile.kill();
+
+   return true;
 }
 
 function render(){
