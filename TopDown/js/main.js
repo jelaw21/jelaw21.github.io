@@ -16,7 +16,7 @@ var walk;
 
 var layer;
 var blocked;
-var sprite;
+var player;
 
 
 function create(){
@@ -46,14 +46,14 @@ function create(){
 
 
 
-    sprite = game.add.sprite(31, 289, 'player');
-    sprite.anchor.set(0.5);
+    player = game.add.sprite(31, 289, 'player');
+    player.anchor.set(0.5);
 
     walk = sprite.animations.add('walk');
 
     game.physics.arcade.enable(sprite);
 
-    sprite.body.setSize(16,16, 0, 0);
+    player.body.setSize(16,16, 0, 0);
 
     game.camera.follow(sprite);
 
@@ -63,20 +63,20 @@ function create(){
 
 function update(){
 
-    game.physics.arcade.collide(sprite, blocked);
-    game.physics.arcade.overlap(sprite, coins, collectCoin, null, this);
+    game.physics.arcade.collide(player, blocked);
+    game.physics.arcade.overlap(player, coins, collectCoin, null, this);
 
-    sprite.body.velocity.x = 0;
-    sprite.body.velocity.y = 0;
+    player.body.velocity.x = 0;
+    player.body.velocity.y = 0;
 
     if(cursors.left.isDown){
-        sprite.body.x -= 1;
+        player.body.x -= 1;
     }else if(cursors.right.isDown){
-        sprite.body.x += 1;
-        sprite.animations.play('walk', 30, true);
+        player.body.x += 1;
+        player.animations.play('walk', 30, true);
     }
     if(cursors.right.isUp){
-        sprite.animations.stop('walk', true);
+        player.animations.stop('walk', true);
     }
 
     if(cursors.up.isDown){
