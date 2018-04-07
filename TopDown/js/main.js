@@ -36,9 +36,11 @@ function create(){
 
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
+    objects = map.createLayer('objectLayer');
     map.setCollisionBetween(1, 3520, true, blocked);
+    map.setCollisionBetween(1, 3520, true, objects);
 
-    map.setTileIndexCallback(2096, collectCoin, this, 'objectLayer');
+    map.setTileIndexCallback(2096, collectCoin, this, objects);
     blocked.resizeWorld();
 
 
@@ -47,8 +49,8 @@ function create(){
     //items.enableBody = true;
 
 
-    map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
-    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, items);
+    //map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
+    //map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, items);
 
 
 
