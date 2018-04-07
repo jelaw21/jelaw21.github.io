@@ -29,12 +29,10 @@ function create(){
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
+    game.physics.startSystem(Phaser.Physics.ARCADE);
 
     map = game.add.tilemap('map');
-
     map.addTilesetImage('tiles');
-
-    game.physics.startSystem(Phaser.Physics.ARCADE);
 
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
@@ -73,6 +71,7 @@ function create(){
 function update(){
 
     game.physics.arcade.collide(player, blocked);
+    game.physics.arcade.collide(player, 'objectLayer');
     //game.physics.arcade.collide(player, items, null, collectCoin, this);
 
     if(cursors.left.isDown){
