@@ -40,7 +40,7 @@ function create(){
     map.setCollisionBetween(1, 3520, true, blocked);
 
 
-   
+
     blocked.resizeWorld();
 
 
@@ -102,7 +102,7 @@ function update(){
     }
 }
 
-function collectCoin(player, items){
+function collectCoin(player, item){
 
     if(item.key == 'coin'){
         item.kill();
