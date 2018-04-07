@@ -52,9 +52,6 @@ function create(){
     map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
     map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, items);
 
-
-
-
     player = game.add.sprite(31, 289, 'player');
     player.anchor.set(0.5, 0.5);
 
