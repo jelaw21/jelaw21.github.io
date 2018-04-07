@@ -48,7 +48,7 @@ function create(){
 
 
     map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, coins);
-    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, null, null, true);
+    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, Phaser.World, Phaser.Sprite, true);
 
 
 
@@ -72,9 +72,6 @@ function update(){
 
     game.physics.arcade.collide(player, blocked);
     game.physics.arcade.collide(player, coins, null, collectCoin, this);
-
-
-
 
     if(cursors.left.isDown){
         player.body.velocity.x = -50;
