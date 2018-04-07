@@ -101,7 +101,6 @@ function update(){
 }
 
 function collectCoin(player, item){
-    console.log('function called' + item.properties);
    if(item.key === 'coin'){
        item.kill();
    }
