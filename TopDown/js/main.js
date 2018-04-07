@@ -70,7 +70,7 @@ function update(){
         sprite.body.x -= 1;
     }else if(cursors.right.isDown){
         sprite.body.x += 1;
-        sprite.animations.play('walk', 60, true);
+        sprite.animations.play('walk', 30, true);
     }
     if(cursors.right.isUp){
         sprite.animations.stop('walk', true);
