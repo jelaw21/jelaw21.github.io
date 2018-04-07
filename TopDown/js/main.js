@@ -46,7 +46,9 @@ function create(){
 
 
     items = game.add.group();
-    //items.enableBody = true;
+    items.enableBody = true;
+    items.body.velocity.x = 0;
+    items.body.velocity.y = 0;
 
 
     map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
