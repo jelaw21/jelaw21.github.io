@@ -78,6 +78,7 @@ function update(){
     }else if(cursors.right.isDown){
         player.body.x += 1;
         player.angle = 0;
+        player.scale.y = 1;
         player.animations.play('walk', 30, true);
     }
     if(cursors.right.isUp && cursors.left.isUp){
