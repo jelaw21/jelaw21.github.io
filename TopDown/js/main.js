@@ -1,4 +1,4 @@
-var game = new Phaser.Game(200, 150, Phaser.AUTO, "", {preload:preload, create: create, update:update, render: render});
+var game = new Phaser.Game(160, 150, Phaser.AUTO, "", {preload:preload, create: create, update:update, render: render});
 
 function preload(){
 
@@ -15,7 +15,7 @@ var cursors;
 var walk;
 
 var layer;
-var blockedLayer;
+var blocked;
 var sprite;
 
 
@@ -31,8 +31,8 @@ function create(){
 
 
     layer = map.createLayer('backgroundLayer');
-    blockedLayer = map.createLayer('blockedLayer');
-    map.setCollisionBetween(1, 3520, true, 'blockedLayer');
+    blocked = map.createLayer('blockedLayer');
+    game.map.setCollisionBetween(1, 3520, true, 'blockedLayer');
     layer.resizeWorld();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -60,7 +60,7 @@ function create(){
 
 function update(){
 
-    game.physics.arcade.collide(sprite, blockedLayer);
+    game.physics.arcade.collide(sprite, blocked);
     game.physics.arcade.overlap(sprite, coins, collectCoin, null, this);
 
     sprite.body.velocity.x = 0;
