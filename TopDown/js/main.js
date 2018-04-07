@@ -2,7 +2,7 @@ var game = new Phaser.Game(160, 150, Phaser.AUTO, "", {preload:preload, create: 
 
 function preload(){
 
-    game.load.tilemap('map', 'assets/tilemaps/top-down-test.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('map', 'assets/tilemaps/top-down2.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'assets/images/tiles.png');
     game.load.image('coin', 'assets/images/coin.png');
     game.load.image('chest','assets/images/coin.png');
@@ -94,6 +94,9 @@ function update(){
     }
     else if(cursors.down.isDown){
         player.body.velocity.y = 50;
+    }
+    if(cursors.up.isUp && cursors.down.isDown){
+        player.body.velocity.y = 0;
     }
 }
 
