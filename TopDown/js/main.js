@@ -73,7 +73,7 @@ function create(){
 function update(){
 
     game.physics.arcade.collide(player, blocked);
-    game.physics.arcade.collide(player, 'objectLayer');
+    game.physics.arcade.collide(player, objects);
     //game.physics.arcade.collide(player, items, null, collectCoin, this);
 
     if(cursors.left.isDown){
