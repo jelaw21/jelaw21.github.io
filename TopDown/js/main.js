@@ -38,9 +38,9 @@ function create(){
 
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
-    map.setCollisionBetween(574, 576, true, blocked);
+    map.setCollisionBetween(1, 3520, true, blocked);
 
-    map.setTileIndexCallback(2096, collectCoin, this);
+    map.setTileIndexCallback(2096, collectCoin, this, 'objectLayer');
     blocked.resizeWorld();
 
 
