@@ -95,20 +95,18 @@ function update(){
     else if(cursors.down.isDown){
         player.body.velocity.y = 50;
     }
-    if(cursors.up.isUp && cursors.down.isDown){
+    if(cursors.up.isUp && cursors.down.isUp){
         player.body.velocity.y = 0;
     }
 }
 
-function collectCoin(player, coin){
-    for(var i = 0; i < items.length; i++){
-        if(items[i].gid === 2096){
-            coin.kill();
-
-        }else if(items[i].gid === 2245){
-            return true;
-        }
-    }
+function collectCoin(player, item){
+   if(item.gid === 2096){
+       item.kill();
+   }
+   if(item.gid === 2245){
+       return true;
+   }
 }
 
 function render(){
