@@ -20,7 +20,7 @@ var player;
 
 
 function create(){
-
+    //testing cache clearing ....
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
     game.scale.pageAlignVertically = true;
