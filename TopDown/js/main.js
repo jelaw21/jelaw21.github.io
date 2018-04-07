@@ -86,6 +86,7 @@ function update(){
     }
     if(cursors.right.isUp && cursors.left.isUp){
         player.animations.stop('walk', true);
+        player.body.velocity.x = 0;
     }
 
     if(cursors.up.isDown){
