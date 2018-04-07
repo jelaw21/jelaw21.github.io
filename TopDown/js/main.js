@@ -32,7 +32,7 @@ function create(){
 
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
-    map.setCollisionBetween(572, 576, true, blocked, true);
+    map.setCollisionBetween(1, 576, true, blocked);
     layer.resizeWorld();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
