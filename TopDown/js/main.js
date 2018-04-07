@@ -72,11 +72,13 @@ function update(){
 
     if(cursors.left.isDown){
         player.body.x -= 1;
-        player.angle = 180;
+        //player.angle = 180;
         player.scale.y = -1;
+        player.animations.play('walk', 30, true);
     }else if(cursors.right.isDown){
         player.body.x += 1;
-
+        //player.angle = 0;
+        player.scale.y = -1;
         player.animations.play('walk', 30, true);
     }
     if(cursors.right.isUp){
