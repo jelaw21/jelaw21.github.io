@@ -72,7 +72,7 @@ function update(){
 
     if(cursors.left.isDown){
         player.body.x -= 1;
-        player.imgAngle = 180;
+        player.setAngle(180);
     }else if(cursors.right.isDown){
         player.body.x += 1;
 
