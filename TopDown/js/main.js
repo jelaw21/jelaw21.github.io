@@ -21,6 +21,7 @@ var objects;
 var layer;
 var blocked;
 var player;
+var textSprite;
 var level1Key = false;
 
 
@@ -110,6 +111,10 @@ function collectCoin(player, item){
         //item.body.velocity.y = 0;
         //item.body.immovable = true;
         item.body.moves = false;
+        textSprite = game.add.sprite(game.width/2,game.height/2,'sign');
+        textSprite.setScale(4);
+        textSprite.inputEnabled = true;
+        textSprite.input.clicked = true;
         console.log('SIGN');
     }
 }
