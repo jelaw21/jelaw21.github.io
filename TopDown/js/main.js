@@ -48,7 +48,7 @@ function create(){
 
 
     player = game.add.sprite(31, 289, 'player');
-    player.anchor.set(0.5);
+    player.anchor.set(0.5, 0.5);
 
     walk = player.animations.add('walk');
 
@@ -72,7 +72,7 @@ function update(){
 
     if(cursors.left.isDown){
         player.body.x -= 1;
-        player.setAngle(180);
+        player.angle = 180;
     }else if(cursors.right.isDown){
         player.body.x += 1;
 
