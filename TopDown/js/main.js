@@ -49,13 +49,13 @@ function create(){
     player = game.add.sprite(31, 289, 'player');
     player.anchor.set(0.5);
 
-    walk = sprite.animations.add('walk');
+    walk = player.animations.add('walk');
 
     game.physics.arcade.enable(sprite);
 
     player.body.setSize(16,16, 0, 0);
 
-    game.camera.follow(sprite);
+    game.camera.follow(player);
 
     cursors = game.input.keyboard.createCursorKeys();
 
