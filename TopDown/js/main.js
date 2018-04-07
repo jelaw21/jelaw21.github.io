@@ -73,16 +73,16 @@ function update(){
     game.physics.arcade.collide(player, blocked);
     game.physics.arcade.collide(player, coins, null, collectCoin, this);
 
-    player.body.velocity.x = 0;
-    player.body.velocity.y = 0;
+
+
 
     if(cursors.left.isDown){
-        player.body.x -= 1;
+        player.body.velocity.x = -50;
         player.angle = 180;
         player.scale.y = -1;
         player.animations.play('walk', 30, true);
     }else if(cursors.right.isDown){
-        player.body.x += 1;
+        player.body.velocity.x = 50;
         player.angle = 0;
         player.scale.y = 1;
         player.animations.play('walk', 30, true);
@@ -92,10 +92,10 @@ function update(){
     }
 
     if(cursors.up.isDown){
-        player.body.y -= 1;
+        player.body.velocity.y = -50;
     }
     else if(cursors.down.isDown){
-        player.body.y += 1;
+        player.body.velocity.y = 50;
     }
 }
 
