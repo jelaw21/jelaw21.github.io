@@ -106,9 +106,10 @@ function collectCoin(player, item){
         item.kill();
     }
     if(item.key == 'sign'){
-        item.body.velocity.x = 0;
-        item.body.velocity.y = 0;
-        item.body.immovable = true;
+        //item.body.velocity.x = 0;
+        //item.body.velocity.y = 0;
+        //item.body.immovable = true;
+        item.body.moves = false;
         console.log('SIGN');
     }
 }
