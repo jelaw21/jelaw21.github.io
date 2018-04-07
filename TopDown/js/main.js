@@ -29,13 +29,14 @@ function create(){
 
     map.addTilesetImage('tiles');
 
-
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
     map.setCollisionBetween(1, 576, true, blocked);
     layer.resizeWorld();
 
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+
 
     coins = game.add.group();
     coins.enableBody = true;
