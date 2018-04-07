@@ -102,7 +102,7 @@ function update(){
     }
 }
 
-function collectCoin(sprite, tile){
+function collectCoin(player, tile){
    tile.kill();
 
    return true;
