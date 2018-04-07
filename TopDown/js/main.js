@@ -33,7 +33,7 @@ function create(){
 
     //layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
-    map.setCollisionBetween(1, 576, true, blocked);
+    map.setCollisionBetween(574, 576, true, blocked);
     blocked.resizeWorld();
 
 
