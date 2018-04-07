@@ -50,7 +50,7 @@ function create(){
 
     game.physics.arcade.enable(sprite);
 
-    sprite.body.setSize(16,16);
+    //sprite.body.setSize(16,16);
 
     game.camera.follow(sprite);
 
