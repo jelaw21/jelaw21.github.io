@@ -44,7 +44,7 @@ function create(){
 
 
     items = game.add.group();
-    items.enableBody = true;
+    //items.enableBody = true;
 
 
     map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
@@ -102,10 +102,11 @@ function update(){
 
 function collectCoin(player, item){
     console.log('function called' + item.properties);
-   if(item.properties.value === 'coin'){
+   if(item.key === 'coin'){
        item.kill();
    }
-   if(item.gid === 2245){
+   if(item.key === 'sign'){
+       item.enableBody = false;
        return true;
    }
 }
