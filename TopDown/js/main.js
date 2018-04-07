@@ -60,7 +60,7 @@ function create(){
 
     game.physics.arcade.enable(player);
 
-    player.body.setSize(16,16, 0, 0);
+    player.body.setSize(8,16, 4, 0);
 
     game.camera.follow(player);
 
