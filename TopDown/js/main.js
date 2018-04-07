@@ -14,7 +14,7 @@ function preload(){
 }
 
 var map;
-var coins;
+var items;
 var cursors;
 var walk;
 
@@ -43,12 +43,12 @@ function create(){
 
 
 
-    coins = game.add.group();
-    coins.enableBody = true;
+    items = game.add.group();
+    items.enableBody = true;
 
 
-    map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, coins);
-    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false);
+    map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
+    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, items);
 
 
 
@@ -101,7 +101,14 @@ function update(){
 }
 
 function collectCoin(player, coin){
-    coin.kill();
+    for(var i = 0; i < items.length; i++){
+        if(items[i].gid === 2096){
+            coin.kill();
+
+        }else if(items[i].gid === 2245){
+            return true;
+        }
+    }
 }
 
 function render(){
