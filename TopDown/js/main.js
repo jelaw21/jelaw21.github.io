@@ -32,7 +32,7 @@ function create(){
 
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
-    game.map.setCollisionBetween(1, 3520, true, 'blockedLayer');
+     map.setCollisionBetween(1, 3520, true, 'blockedLayer');
     layer.resizeWorld();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -50,7 +50,7 @@ function create(){
 
     game.physics.arcade.enable(sprite);
 
-    sprite.body.setSize(16,16,0,0);
+    sprite.body.setSize(16,16);
 
     game.camera.follow(sprite);
 
@@ -68,11 +68,11 @@ function update(){
 
     if(cursors.left.isDown){
         sprite.body.x -= 1;
-        sprite.animations.play('walk', 60, true);
     }else if(cursors.right.isDown){
         sprite.body.x += 1;
+        sprite.animations.play('walk', 60, true);
     }
-    if(cursors.left.isUp){
+    if(cursors.right.isUp){
         sprite.animations.stop('walk', true);
     }
 
