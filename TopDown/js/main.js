@@ -101,7 +101,7 @@ function update(){
 }
 
 function collectCoin(player, item){
-    console.log('function called' + item.gid);
+    console.log('function called' + item);
    if(item.gid === 2096){
        item.kill();
    }
