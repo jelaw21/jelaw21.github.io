@@ -21,7 +21,6 @@ var walk;
 var layer;
 var blocked;
 var player;
-var sign;
 var level1Key = false;
 
 
@@ -49,7 +48,7 @@ function create(){
 
 
     map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, coins);
-    sign = map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, null, null, true);
+    map.createFromObjects('objectLayer', 2245, 'sign', 0, true, false, null, null, true);
 
 
 
@@ -72,7 +71,7 @@ function create(){
 function update(){
 
     game.physics.arcade.collide(player, blocked);
-    game.physics.arcade.overlap(player, coins, collectCoin, null, this);
+    game.physics.arcade.collide(player, coins, null, collectCoin, this);
 
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
