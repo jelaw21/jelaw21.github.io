@@ -50,7 +50,7 @@ function create(){
 
     game.physics.arcade.enable(sprite);
 
-    //sprite.body.setSize(16,16);
+    sprite.body.setSize(16,16, 0, 0);
 
     game.camera.follow(sprite);
 
@@ -89,5 +89,5 @@ function collectCoin(player, coin){
 }
 
 function render(){
-    game.debug.body(sprite);
+    //game.debug.body(sprite);
 }
