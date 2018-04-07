@@ -47,8 +47,7 @@ function create(){
 
     items = game.add.group();
     items.enableBody = true;
-    items.body.velocity.x = 0;
-    items.body.velocity.y = 0;
+
 
 
     map.createFromObjects('objectLayer', 2096, 'coin', 0,true,false, items);
@@ -107,6 +106,8 @@ function collectCoin(player, item){
         item.kill();
     }
     if(item.key == 'sign'){
+        item.body.velocity.x = 0;
+        item.body.velocity.y = 0;
         console.log('SIGN');
     }
 }
