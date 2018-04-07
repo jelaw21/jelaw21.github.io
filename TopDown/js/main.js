@@ -2,7 +2,7 @@ var game = new Phaser.Game(160, 150, Phaser.AUTO, "", {preload:preload, create: 
 
 function preload(){
 
-    game.load.tilemap('map', 'assets/tilemaps/top-down2.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('map', 'assets/tilemaps/top-down-test.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'assets/images/tiles.png');
     game.load.image('coin', 'assets/images/coin.png');
     game.load.spritesheet('player', 'assets/images/charMovement.png', 16, 15);
@@ -30,7 +30,7 @@ function create(){
     map.addTilesetImage('tiles');
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    
+
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
     map.setCollisionBetween(1, 576, true, blocked);
