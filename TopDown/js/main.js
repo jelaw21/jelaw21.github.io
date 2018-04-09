@@ -38,7 +38,7 @@ function create(){
     layer = map.createLayer('backgroundLayer');
     blocked = map.createLayer('blockedLayer');
 
-    map.setCollisionBetween(1, 3520, true, blocked);
+    map.setCollisionBetween(1, 3250, true, blocked);
 
 
 
