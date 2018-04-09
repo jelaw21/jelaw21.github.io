@@ -5,7 +5,7 @@ Test.Boot = function(){};
 Test.Boot.prototype = {
 
     preload: function(){
-        this.load.image('logo', 'assets.images/GWK.png');
+        this.load.image('logo', 'assets/images/GWK.png');
         this.load.image('preloadbar', 'assets/images/smoke.jpg');
 
     },
@@ -18,7 +18,7 @@ Test.Boot.prototype = {
         this.scale.maxHeigt = 640;
 
         this.scale.pageAlignHorizontally = true;
-        this.scale.setScreenSize(true);
+        this.scale.pageAlignVertically = true;
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.state.start('Preload');
     }
