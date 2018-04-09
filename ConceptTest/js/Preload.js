@@ -9,7 +9,7 @@ Test.Preload.prototype = {
         this.splash.scale.setTo(0.20, 0.20);
         this.splash.anchor.setTo(0.5);
         this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY + 120, 'preloadbar');
-        this.preloadBar.scale.setTo(0.2,0.2);
+        this.preloadBar.scale.setTo(1.0,0.2);
         this.preloadBar.anchor.setTo(0.5);
 
         this.load.setPreloadSprite(this.preloadBar);
