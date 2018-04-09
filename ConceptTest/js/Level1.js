@@ -31,7 +31,7 @@ Test.Level1.prototype = {
 
        //this.grass.resizeWorld();
 
-        this.player = this.game.add.sprite(100, 550, 'playerS');
+        this.player = this.game.add.sprite(100, 500, 'playerS');
         this.player.anchor.set(0.5, 0.5);
 
         this.walk = this.player.animations.add('walk');
