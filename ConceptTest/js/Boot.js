@@ -14,8 +14,8 @@ Test.Boot.prototype = {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.scale.minWidth = 512;
         this.scale.minHeight = 384;
-        this.scale.maxWidth = 1280;
-        this.scale.maxHeigt = 640;
+        this.scale.maxWidth = 768;
+        this.scale.maxHeigt = 512;
 
         this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
