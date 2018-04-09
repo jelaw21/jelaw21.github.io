@@ -31,8 +31,18 @@ Test.Level1.prototype = {
 
        //this.grass.resizeWorld();
 
+        this.player = this.game.add.sprite(100, 1200, 'playerS');
+        this.player.anchor.set(0.5, 0.5);
 
+        this.walk = this.player.animations.add('walk');
 
+        this.game.physics.arcade.enable(player);
+
+        //player.body.setSize(4,12, 6, 2);
+
+        game.camera.follow(player);
+
+        cursors = game.input.keyboard.createCursorKeys();
     }
 
 
