@@ -24,11 +24,6 @@ Test.Preload.prototype = {
         this.load.tilemap('town', 'assets/tilemaps/town.json',  null, Phaser.Tilemap.TILED_JSON);
     },
     create:function(){
-        this.time.events.add(Phaser.Timer.SECOND * 4, delayedStart(), this);
-    },
-
-    delayedStart: function(){
-        this.state.start('MainMenu');
+        this.time.events.add(Phaser.Timer.SECOND * 4, this.state.start('MainMenu'), this);
     }
-
 };
