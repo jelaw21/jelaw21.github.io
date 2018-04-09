@@ -33,7 +33,7 @@ Test.Level1.prototype = {
         this.grass.resizeWorld();
 
         this.player = this.game.add.sprite(300, 600, 'playerS');
-        console.log(JSON.stringify(items[0]));
+        console.log(JSON.stringify(this.items[0]));
         this.player.anchor.set(0.5, 0.5);
 
         this.walk = this.player.animations.add('walk');
