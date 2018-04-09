@@ -12,11 +12,7 @@ Test.Boot.prototype = {
 
     create: function(){
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.scale.minWidth = 600;
-        this.scale.minHeight = 800;
-        this.scale.maxWidth = 2880;
-        this.scale.maxHeight = 1920;
-
+        
         this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
         this.game.physics.startSystem(Phaser.Physics.ARCADE);

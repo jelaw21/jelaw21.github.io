@@ -17,9 +17,6 @@ Test.Level1.prototype = {
         this.blocked = this.map.createLayer('blockedLayer');
         this.foreground = this.map.createLayer('foregroundLayer');
 
-
-
-
        //this.grass.resizeWorld();
 
     }
