@@ -7,15 +7,15 @@ Test.Level1.prototype = {
     create: function(){
 
         this.map = this.add.tilemap('forest');
-        map.addTilesetImage('backgroundTiles1');
-        map.addTilesetImage('backgroundTiles2');
+        this.map.addTilesetImage('backgroundTiles1');
+        this.map.addTilesetImage('backgroundTiles2');
 
-        grass = map.createLayer('grassLayer');
-
-
+        this.grass = this.map.createLayer('grassLayer');
 
 
-        grass.resizeWorld();
+
+
+       this.grass.resizeWorld();
 
     }
 
