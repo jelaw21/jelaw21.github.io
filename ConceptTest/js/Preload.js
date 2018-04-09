@@ -19,7 +19,7 @@ Test.Preload.prototype = {
         this.load.spritesheet('playerN', 'assets/images/BODY_NORTH.png', 64, 64);
         this.load.spritesheet('playerS', 'assets/images/BODY_SOUTH.png', 64, 64);
         this.load.image('gui', 'assets/images/panel_brown.png');
-        this.load.image('ProjectUtumno_full', 'assets/images/ProjectUtumno_full.png');
+        this.load.image('Utumno_full', 'assets/images/ProjectUtumno_full.png');
         this.load.image('townTiles1', 'assets/images/town.png');
         this.load.image('backgroundTiles2', 'assets/images/trees_plants.png');
         this.load.image('backgroundTiles1', 'assets/images/trees_plants_rocks.png');

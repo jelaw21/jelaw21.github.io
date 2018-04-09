@@ -11,6 +11,8 @@ Test.Level1.prototype = {
         this.map = this.add.tilemap('forest');
         this.map.addTilesetImage('backgroundTiles2');
         this.map.addTilesetImage('backgroundTiles1');
+        this.map.addTilesetImage('Utumno_full');
+        this.map.addTilesetImage('townTiles1');
 
 
         this.grass = this.map.createLayer('grassLayer');
