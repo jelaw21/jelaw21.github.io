@@ -19,7 +19,7 @@ Test.Level1.prototype = {
 
         this.foreground = this.map.createLayer('foregroundLayer');
 
-        this.map.setCollisionBetween(1, 512, true, 'blocked');
+        this.map.setCollisionBetween(1, 512, true, 'blockedLayer');
 
         items = game.add.group();
         items.enableBody = true;
