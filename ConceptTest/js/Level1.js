@@ -21,11 +21,11 @@ Test.Level1.prototype = {
 
         this.map.setCollisionBetween(1, 512, true, 'blockedLayer');
 
-        items = game.add.group();
-        items.enableBody = true;
+        this.items = this.game.add.group();
+        this.items.enableBody = true;
 
 
-        map.createFromObjects('objectLayer',3370,'coin',0,true, false, items);
+        this.map.createFromObjects('objectLayer',3370,'coin',0,true, false, this.items);
 
        //this.grass.resizeWorld();
 
