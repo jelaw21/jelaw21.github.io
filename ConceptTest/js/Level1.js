@@ -26,12 +26,13 @@ Test.Level1.prototype = {
         this.items = this.game.add.group();
         this.items.enableBody = true;
 
-
+        this.map.createFromObjects('objectLayer', 835, 'playerS', 0, true, false, this.items);
         this.map.createFromObjects('objectLayer',3370,'coin',0,true, false, this.items);
+
 
         this.grass.resizeWorld();
 
-        this.player = this.game.add.sprite(100, 500, 'playerS');
+        this.player = this.items[0];
         this.player.anchor.set(0.5, 0.5);
 
         this.walk = this.player.animations.add('walk');
