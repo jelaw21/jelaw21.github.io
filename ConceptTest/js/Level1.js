@@ -29,9 +29,9 @@ Test.Level1.prototype = {
 
         this.map.createFromObjects('objectLayer',3370,'coin',0,true, false, this.items);
 
-       //this.grass.resizeWorld();
+        this.grass.resizeWorld();
 
-        this.player = this.game.add.sprite(100, 500, 'playerS');
+        this.player = this.game.add.sprite(100, 450, 'playerS');
         this.player.anchor.set(0.5, 0.5);
 
         this.walk = this.player.animations.add('walk');
