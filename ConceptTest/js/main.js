@@ -1,6 +1,6 @@
 var Test = Test || {};
 
-Test.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, "");
+Test.game = new Phaser.Game(400, 800, Phaser.AUTO, "");
 
 Test.game.state.add('Boot', Test.Boot);
 Test.game.state.add('Preload', Test.Preload);
