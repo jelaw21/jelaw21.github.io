@@ -36,13 +36,13 @@ Test.Level1.prototype = {
 
         this.walk = this.player.animations.add('walk');
 
-        this.game.physics.arcade.enable(player);
+        this.game.physics.arcade.enable(this.player);
 
         //player.body.setSize(4,12, 6, 2);
 
-        game.camera.follow(player);
+        this.game.camera.follow(this.player);
 
-        cursors = game.input.keyboard.createCursorKeys();
+        this.cursors = this.game.input.keyboard.createCursorKeys();
     }
 
 
