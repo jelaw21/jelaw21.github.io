@@ -25,8 +25,10 @@ Test.Preload.prototype = {
         this.load.image('title', 'assets/images/title.png');
         this.load.tilemap('forest', 'assets/tilemaps/forest.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.tilemap('town', 'assets/tilemaps/town.json',  null, Phaser.Tilemap.TILED_JSON);
+
+        this.time.events.add(Phaser.Timer.SECOND * 10, this.create(), this);
     },
     create:function(){
-        this.time.events.add(Phaser.Timer.SECOND * 10, this.state.start('MainMenu'), this);
+        this.state.start('MainMenu');
     }
 };
