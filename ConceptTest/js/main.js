@@ -1,4 +1,4 @@
-var Test = ConceptTest || {};
+var Test = Test || {};
 
 Test.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, "");
 
