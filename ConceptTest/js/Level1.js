@@ -20,7 +20,7 @@ Test.Level1.prototype = {
 
 
 
-       this.grass.resizeWorld();
+       //this.grass.resizeWorld();
 
     }
 
