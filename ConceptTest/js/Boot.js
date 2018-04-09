@@ -5,8 +5,8 @@ Test.Boot = function(){};
 Test.Boot.prototype = {
 
     preload: function(){
-        this.load.image('logo', 'assets/images/GWK.png');
-        this.load.image('preloadbar', 'assets/images/smoke.jpg');
+        this.load.image('logo', 'assets/images/gwkLogo.png');
+        this.load.image('preloadbar', 'assets/images/gwkPreloadBar.png');
 
     },
 
