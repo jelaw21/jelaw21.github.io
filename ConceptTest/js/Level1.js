@@ -13,6 +13,8 @@ Test.Level1.prototype = {
 
         this.grass = this.map.createLayer('grassLayer');
         this.groundCover = this.map.createLayer('groundCover');
+        this.blocked = this.map.createLayer('blockedLayer');
+        this.foreground = this.map.createLayer('foregroundLayer');
 
 
 
