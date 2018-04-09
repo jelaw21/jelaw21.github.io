@@ -23,4 +23,4 @@ Test.Boot.prototype = {
         this.state.start('Preload');
     }
 
-}
+};
