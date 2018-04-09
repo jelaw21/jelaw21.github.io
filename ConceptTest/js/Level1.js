@@ -6,6 +6,9 @@ Test.Level1.prototype = {
 
     create: function(){
 
+        this.game.config.width = 400;
+        this.game.config.height = 800;
+
         this.map = this.add.tilemap('forest');
         this.map.addTilesetImage('backgroundTiles2');
         this.map.addTilesetImage('backgroundTiles1');
