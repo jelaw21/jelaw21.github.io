@@ -22,6 +22,7 @@ Test.Preload.prototype = {
         this.load.image('townTiles1', 'assets/images/town.png');
         this.load.image('backgroundTiles2', 'assets/images/trees_plants.png');
         this.load.image('backgroundTiles1', 'assets/images/trees_plants.png');
+        this.load.image('title', 'assets/images/title.png');
         this.load.tilemap('forest', 'assets/tilemaps/forest.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.tilemap('town', 'assets/tilemaps/town.json',  null, Phaser.Tilemap.TILED_JSON);
     },
