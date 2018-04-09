@@ -260,10 +260,6 @@
          "tileheight":32,
          "tilewidth":32,
          "transparentcolor":"#000000"
-        }, 
-        {
-         "firstgid":6849,
-         "source":"..\/..\/..\/tilemaps\/townTiles1.tsx"
         }],
  "tilewidth":32,
  "type":"map",
