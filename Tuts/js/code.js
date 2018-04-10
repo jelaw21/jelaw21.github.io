@@ -99,5 +99,5 @@ function update(){
 };
 
 function collectStar(player, star){
-    star.disableBodyd(true, true);
+    star.disableBody(true, true);
 }
