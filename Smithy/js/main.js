@@ -69,7 +69,7 @@ function update(){
 
 function registerHit(pointer) {
     var distance = Phaser.Math.Distance.Between(this.x, this.y, pointer.x, pointer.y);
-    var distance = this.width/2
+    
     var scale = this.scaleX - 5;
     console.log(distance);
     var accuracy;
