@@ -52,7 +52,7 @@ function update(){
 };
 
 function registerHit(pointer){
-    if(Math.abs(pointer.x - this.x) < 100 && Math.abs(pointer.x - this.x) < 100){
+    if(Math.abs(pointer.x - this.x) < this.width/4 && Math.abs(pointer.x - this.x) < this.width/4){
         clickText.setText("Bullseye");
     }else
         clickText.setText("Clicked" + pointer.x + " , " + pointer.y);
