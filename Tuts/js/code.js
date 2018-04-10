@@ -17,6 +17,8 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+var score = 0;
+var scoreText;
 
 function preload(){
     this.load.image('sky', 'assets/sky.png');
@@ -28,8 +30,7 @@ function preload(){
 };
 
 function create(){
-    var score = 0;
-    var scoreText;
+
 
     this.add.image(0,0,'sky').setOrigin(0,0);
 
@@ -56,7 +57,6 @@ function create(){
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
-    score = 0;
     scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#000'});
 
 
