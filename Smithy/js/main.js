@@ -40,7 +40,7 @@ function create(){
     var hitBox = this.add.image(0, 0, 'hitspotFore').setInteractive().setScale(5);
     Phaser.Display.Align.In.Center(hitBoxEdge, background);
     Phaser.Display.Align.In.Center(hitBox, background);
-    clickText = this.add.text(16, 16, data.getData('messge'), {fontSize: '32px'});
+    clickText = this.add.text(16, 16,"DEBUG INFO", {fontSize: '32px'});
 
 
     hitBox.on('pointerdown', registerHit);
