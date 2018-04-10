@@ -81,6 +81,7 @@ function registerHit(pointer) {
     }else{
         precision = LEGEND;
     }
+    console.log("precision: " + precision);
     if(scale < 0.5 ){
         accuracy = OK;
     }else if(scale < 1.5){
@@ -90,7 +91,9 @@ function registerHit(pointer) {
     }else{
         accuracy = LEGEND;
     }
+    console.log("accuracy: " + accuracy);
 
+    console.log(praise[(precision + accuracy / 2)]);
     var comment = praise[(precision + accuracy / 2)];
 
 
