@@ -69,15 +69,16 @@ function update(){
 
 function registerHit(pointer) {
     var distance = Phaser.Math.Distance.Between(this.x, this.y, pointer.x, pointer.y);
+    var distance = this.width/2
     var scale = this.scaleX - 5;
     console.log(distance);
     var accuracy;
     var precision;
-    if(distance > this.x * 4.5){
+    if(distance > this.width/2 * .8){
         precision = OK;
-    }else if (distance > this.x * 3.5){
+    }else if (distance > this.width/2 * .4){
         precision = GOOD;
-    }else if (distance > this.x * 1.5){
+    }else if (distance > this.width/2 * .15){
         precision = GREAT;
     }else{
         precision = LEGEND;
