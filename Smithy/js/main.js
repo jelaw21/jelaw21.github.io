@@ -81,7 +81,7 @@ function registerHit(pointer) {
     }else{
         precision = LEGEND;
     }
-    console.log("precision: " + precision);
+
     if(scale < 0.5 ){
         accuracy = OK;
     }else if(scale < 1.5){
@@ -91,11 +91,8 @@ function registerHit(pointer) {
     }else{
         accuracy = LEGEND;
     }
-    console.log("accuracy: " + accuracy);
 
-    console.log(Math.round((precision + accuracy) / 2));
-    var comment = praise[(precision + accuracy / 2)];
-
+    var comment = praise[Math.round((precision + accuracy) / 2)];
 
     //content = ["SpritePos: " + this.x + " , " + this.y, "Clicked: " + pointer.x + " , " + pointer.y, "Distance: " + distance, "Progress: " + this.scaleX];
     clickText.setText(comment);
