@@ -93,7 +93,7 @@ function registerHit(pointer) {
     }
     console.log("accuracy: " + accuracy);
 
-    console.log(praise[(Math.round(precision + accuracy / 2))]);
+    console.log(Math.round((precision + accuracy) / 2));
     var comment = praise[(precision + accuracy / 2)];
 
 
