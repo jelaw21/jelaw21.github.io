@@ -25,7 +25,7 @@ function preload(){
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', {frameWidth: 32, frameHeight: 48});
 
-}
+};
 
 function create(){
     this.add.image(0,0,'sky').setOrigin(0,0);
@@ -58,17 +58,17 @@ function create(){
         frames: this.anims.generateFrameNumbers('dude', {start: 5, end: 8}),
         frameRate: 10,
         repeat: -1
-    })
+    });
     
     this.add.image(400, 300, 'star');
     this.physics.add.collider(player, platforms);
     
     cursors = this.input.keyboard.createCursorKeys();
-}
+};
 
 function update(){
     
-    if(cursors.left.isDown){
+    /*if(cursors.left.isDown){
         player.setVelocityX(-160);
         player.anims.play('left', true);
     }
@@ -83,5 +83,5 @@ function update(){
     }
     if(cursors.up.isDown && player.body.touching.down){
         player.setVelocity(-330);
-    }
-}
+    }*/
+};
