@@ -81,11 +81,11 @@ function registerHit(pointer) {
     }else{
         precision = LEGEND;
     }
-    if(scale > 0.5 ){
+    if(scale < 0.5 ){
         accuracy = OK;
-    }else if(scale > 1.5){
+    }else if(scale < 1.5){
         accuracy = GOOD;
-    }else if(scale > 3.5){
+    }else if(scale < 3.5){
         accuracy = GREAT;
     }else{
         accuracy = LEGEND;
