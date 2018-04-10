@@ -30,13 +30,10 @@ function preload() {
 };
 
 function create(){
-    var background = this.add.image(400, 300, 'background');
+    var background = this.add.image(400, 300, 'background').setScale(3);
     var inset = this.add.image(400, 300, 'inset');
-    background.display.ALIGN_CENTER;
-    inset.display.ALIGN_CENTER;
-    background.setScale(3);
-    inset.setScale(3);
-
+    Phaser.Display.Align.In.Center(background);
+    Phaser.Display.Align.In.Center(inset, background).setScale(3);
 };
 function update(){
 
