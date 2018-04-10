@@ -37,7 +37,7 @@ function create(){
     Phaser.Display.Align.In.Center(background, this.add.zone(game.config.width/2, game.config.height/2, game.config.width, game.config.height));
     Phaser.Display.Align.In.Center(inset, background)
     var hitBoxEdge = this.add.image(0, 0,'hitspotBack').setScale(10);
-    var hitBox = this.add.image(0, 0, 'hitspotFore').setInteractive();
+    var hitBox = this.add.image(0, 0, 'hitspotFore').setInteractive().setScale(5);
     Phaser.Display.Align.In.Center(hitBoxEdge, background);
     Phaser.Display.Align.In.Center(hitBox, background);
     clickText = this.add.text(16, 16, 'Clicked: 0, 0', {fontSize: '32px'});
