@@ -31,9 +31,9 @@ function preload() {
 
 function create(){
     var background = this.add.image(400, 300, 'background').setScale(3);
-    var inset = this.add.image(400, 300, 'inset');
-    Phaser.Display.Align.In.Center(background);
-    Phaser.Display.Align.In.Center(inset, background).setScale(3);
+    var inset = this.add.image(400, 300, 'inset').setScale(3);
+    Phaser.Display.Align.In.Center(background, this);
+    Phaser.Display.Align.In.Center(inset, background)
 };
 function update(){
 
