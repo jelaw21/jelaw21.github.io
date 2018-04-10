@@ -52,7 +52,7 @@ function update(){
 };
 
 function registerHit(pointer) {
-    var distance = Phaser.Math.distance(this.x, this.y, pointer.x, pointer.y);
+    var distance = Phaser.Math.Vector4.distance(this.x, this.y, pointer.x, pointer.y);
     content = ["SpritePos: " + this.x + " , " + this.y, "Clicked: " + pointer.x + " , " + pointer.y, "Distance: " + distance];
     clickText.setText(content);
 
