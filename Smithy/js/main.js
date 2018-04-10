@@ -52,7 +52,7 @@ function create(){
         duration: 1000,
         yoyo: true,
         repeat: -1,
-        timeScale: 0.2
+        timeScale: 0.6
     })
 
 
