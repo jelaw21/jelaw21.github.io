@@ -30,9 +30,9 @@ function preload() {
 };
 
 function create(){
-    var background = this.add.image(0, 0, 'background').setScale(3);
-    var inset = this.add.image(0, 0, 'inset').setScale(3);
-    Phaser.Display.Align.In.Center(background, game);
+    var background = this.add.image(0, 0, 'background').setScale(5);
+    var inset = this.add.image(0, 0, 'inset').setScale(5);
+    Phaser.Display.Align.In.Center(background, this.add.zone(game.config.width/2, game.config.height/2, game.config.width, game.config.height));
     Phaser.Display.Align.In.Center(inset, background)
 };
 function update(){
