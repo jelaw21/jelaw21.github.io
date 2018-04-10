@@ -46,7 +46,7 @@ function create(){
     Phaser.Display.Align.In.Center(hitBoxEdge, background);
     Phaser.Display.Align.In.Center(hitBox, background);
     var content = ["Hit the CENTER of the gray target at its MAXIMUM point"];
-    clickText = this.add.text(game.config.width/2, 16, content , {fontSize: '32px'});
+    clickText = this.add.text(16, 16, content , {fontSize: '32px'});
 
 
     hitBox.on('pointerdown', registerHit);
