@@ -18,6 +18,11 @@ var config = {
 
 var game = new Phaser.Game(config);
 var clickText;
+var OK = 0;
+var GOOD = 1;
+var GREAT = 2;
+var LEGEND = 3;
+var praise = ["OK", 'GOOD', 'GREAT', 'LEGEND'];
 
 function preload() {
     this.load.image('background', 'assets/PNG/panel_brown.png');
@@ -63,7 +68,32 @@ function update(){
 
 function registerHit(pointer) {
     var distance = Phaser.Math.Distance.Between(this.x, this.y, pointer.x, pointer.y);
-    content = ["SpritePos: " + this.x + " , " + this.y, "Clicked: " + pointer.x + " , " + pointer.y, "Distance: " + distance, "Progress: " + this.scaleX];
-    clickText.setText(content);
+    var scale = this.scaleX - 5;
+    var accuracy;
+    var precision;
+    if(distance > this.x * 4.5){
+        precision = OK;
+    }else if (distance > this.x * 3.5){
+        precision = GOOD;
+    }else if (distance > this.x * 1.5){
+        precision = GREAT;
+    }else{
+        precision = LEGEND;
+    }
+    if(scale > 4.5 ){
+        accuracy = OK;
+    }else if(scale > 3.5){
+        accuracy = GOOD;
+    }else if(scalge > 1.5){
+        accuracy = GREAT;
+    }else{
+        accuracy = LEGEND;
+    }
+
+    var comment = praise[(precision + accuracy / 2)];
+
+
+    //content = ["SpritePos: " + this.x + " , " + this.y, "Clicked: " + pointer.x + " , " + pointer.y, "Distance: " + distance, "Progress: " + this.scaleX];
+    clickText.setText(comment);
 
 }
