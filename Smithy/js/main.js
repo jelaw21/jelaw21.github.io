@@ -49,7 +49,7 @@ function create(){
         targets: hitBox,
         scaleX: 10,
         scaleY: 10,
-        duration: -1,
+        duration: 1000,
         yoyo: true,
         repeat: -1,
         timeScale: 0.2
