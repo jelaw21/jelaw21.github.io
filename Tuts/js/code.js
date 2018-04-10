@@ -35,6 +35,16 @@ function create(){
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
+
+    stars = this.physics.add.group({
+        key:'star',
+        repeat: 11,
+        setXY: {x: 12, y: 0, stepX: 70}
+    });
+
+    stars.children.iterate(function(child){
+        child.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
     
     player = this.physics.add.sprite(100, 450, 'dude');
     player.setBounce(0.2);
@@ -60,7 +70,10 @@ function create(){
     });
     
     this.add.image(400, 300, 'star');
+
+    this.physics.add.collider(stars, platforms);
     this.physics.add.collider(player, platforms);
+    this.physics.add.overlap(player, stars, collectStar, null, this);
     
     cursors = this.input.keyboard.createCursorKeys();
 };
@@ -84,3 +97,7 @@ function update(){
         player.setVelocityY(-330);
     }
 };
+
+function collectStar(player, star){
+    star.disableBodyd(true, true);
+}
