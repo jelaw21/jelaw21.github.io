@@ -46,10 +46,12 @@ function create(){
     hitBox.on('pointerdown', registerHit);
 
     this.tweens.add({
-        target: hitBox,
+        targets: hitBox,
         scaleX: 10,
         duration: 3000,
-        yoyo: true
+
+        yoyo: true,
+        repeat: -1
     })
 
 
