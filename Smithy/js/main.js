@@ -34,6 +34,12 @@ function create(){
     var inset = this.add.image(0, 0, 'inset').setScale(5);
     Phaser.Display.Align.In.Center(background, this.add.zone(game.config.width/2, game.config.height/2, game.config.width, game.config.height));
     Phaser.Display.Align.In.Center(inset, background)
+    var hitBoxEdge = this.load.image(0,0,'hitspotBack').setScale(5);
+    var hitBox = this.load.image(0, 0, 'hitspotFore');
+    Phaser.Display.Align.In.Center(hitBoxEdge, background);
+    Phaser.Display.Align.In.Center(hitBox, background);
+
+
 };
 function update(){
 
