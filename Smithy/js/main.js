@@ -34,6 +34,7 @@ function create(){
     Phaser.Display.Align.In.Center('background', this.add.zone(400, 300, 800, 600));
     background.display.ALIGN_CENTER;
     this.add.image(400, 300, 'inset');
+    ScaleXY()
 
 };
 function update(){

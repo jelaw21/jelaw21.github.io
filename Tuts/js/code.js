@@ -51,12 +51,12 @@ function create(){
 
     bombs = this.physics.add.group();
 
-
     
     player = this.physics.add.sprite(100, 450, 'dude');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
+    score = 0;
     scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#000'});
 
 
