@@ -43,7 +43,7 @@ function create(){
     clickText = this.add.text(16, 16, 'Clicked: 0, 0', {fontSize: '32px'});
 
 
-    hitBox.on('pointerdown', registerHit, this);
+    hitBox.on('pointerdown', registerHit);
 
 };
 function update(){
@@ -51,7 +51,7 @@ function update(){
 };
 
 function registerHit(pointer){
-
+    console.log("The sprite was clicked: " + pointer.x);
     clickText.setText("Clicked" + pointer.x + " , " + pointer.y);
 
 }
