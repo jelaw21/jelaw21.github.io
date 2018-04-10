@@ -51,7 +51,8 @@ function create(){
         scaleY: 10,
         duration: -1,
         yoyo: true,
-        repeat: -1
+        repeat: -1,
+        timeScale: 0.2
     })
 
 
