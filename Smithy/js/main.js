@@ -31,10 +31,11 @@ function preload() {
 
 function create(){
     var background = this.add.image(400, 300, 'background');
-    Phaser.Display.Align.In.Center('background', this.add.zone(400, 300, 800, 600));
+    var inset = this.add.image(400, 300, 'inset');
     background.display.ALIGN_CENTER;
-    this.add.image(400, 300, 'inset');
-    ScaleXY()
+    inset.display.ALIGN_CENTER;
+    background.setScale(3);
+    inset.setScale(3);
 
 };
 function update(){
