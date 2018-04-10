@@ -24,7 +24,7 @@ function preload() {
     this.load.image('barLend', 'assets/PNG/barBack_horizontalLeft.png');
     this.load.image('barRend', 'assets/PNG/barBack_horizontalRight.png');
     this.load.image('barMid', 'assets/PNG/barBack_horizontalMid.png');
-    this.load.image('hitspotBack', 'assets/PNG/iconCircle_gray.png');
+    this.load.image('hitspotBack', 'assets/PNG/iconCircle_grey.png');
     this.load.image('hitspotFore', 'assets/PNG/iconCircle_blue.png');
     this.load.image('anvil', 'assets/Anvil2.png');
 };
