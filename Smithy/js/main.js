@@ -19,8 +19,8 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.image('background', 'assets/PNG/panel_brown');
-    this.load.image('inset', 'assets/PNG/panelInset)beigeLight.png');
+    this.load.image('background', 'assets/PNG/panel_brown.png');
+    this.load.image('inset', 'assets/PNG/panelInset_beigeLight.png');
     this.load.image('barLend', 'assets/PNG/barBack_horizontalLeft.png');
     this.load.image('barRend', 'assets/PNG/barBack_horizontalRight.png');
     this.load.image('barMid', 'assets/PNG/barBack_horizontalMid.png');
