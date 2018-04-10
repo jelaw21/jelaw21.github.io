@@ -45,13 +45,16 @@ function create(){
 
     hitBox.on('pointerdown', registerHit);
 
+
 };
 function update(){
 
 };
 
 function registerHit(pointer){
-    console.log("The sprite was clicked: " + pointer.x);
-    clickText.setText("Clicked" + pointer.x + " , " + pointer.y);
+    if(Math.abs(pointer.x - this.x) < 100 && Math.abs(pointer.x - this.x) < 100){
+        clickText.setText("Bullseye");
+    }else
+        clickText.setText("Clicked" + pointer.x + " , " + pointer.y);
 
 }
