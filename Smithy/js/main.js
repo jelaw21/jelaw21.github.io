@@ -17,6 +17,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+var clickText;
 
 function preload() {
     this.load.image('background', 'assets/PNG/panel_brown.png');
@@ -30,17 +31,29 @@ function preload() {
 };
 
 function create(){
+
     var background = this.add.image(0, 0, 'background').setScale(5);
     var inset = this.add.image(0, 0, 'inset').setScale(5);
     Phaser.Display.Align.In.Center(background, this.add.zone(game.config.width/2, game.config.height/2, game.config.width, game.config.height));
     Phaser.Display.Align.In.Center(inset, background)
     var hitBoxEdge = this.add.image(0, 0,'hitspotBack').setScale(10);
-    var hitBox = this.add.image(0, 0, 'hitspotFore');
+    var hitBox = this.add.image(0, 0, 'hitspotFore').setInteractive();
     Phaser.Display.Align.In.Center(hitBoxEdge, background);
     Phaser.Display.Align.In.Center(hitBox, background);
+    clickText = this.add.text(16, 16, 'Clicked: 0, 0', {fontSize: '32px'});
 
+
+    hitBox.on('pointerdown', registerHit, this);
 
 };
 function update(){
 
 };
+
+function registerHit(sprite, pointer){
+
+    
+
+
+
+}
