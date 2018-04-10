@@ -82,6 +82,6 @@ function update(){
         player.anims.play('turn');
     }
     if(cursors.up.isDown && player.body.touching.down){
-        player.setVelocityX(-330);
+        player.setVelocityY(-330);
     }
 };
