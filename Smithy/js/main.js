@@ -30,7 +30,9 @@ function preload() {
 };
 
 function create(){
-    this.add.image(400, 300, 'background');
+    var background = this.add.image(400, 300, 'background');
+    Phaser.Display.Align.In.Center('background', this.add.zone(400, 300, 800, 600));
+    background.display.ALIGN_CENTER;
     this.add.image(400, 300, 'inset');
 
 };
