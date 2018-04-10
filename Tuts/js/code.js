@@ -68,20 +68,20 @@ function create(){
 
 function update(){
     
-    /*if(cursors.left.isDown){
+    if(cursors.left.isDown){
         player.setVelocityX(-160);
         player.anims.play('left', true);
     }
     else if(cursors.right.isDown){
-        player.setVelocity(160);
+        player.setVelocityX(160);
         player.anims.play('right', true);
     }
     else
     {
-        player.setVelocity(0);
+        player.setVelocityX(0);
         player.anims.play('turn');
     }
     if(cursors.up.isDown && player.body.touching.down){
-        player.setVelocity(-330);
-    }*/
+        player.setVelocityX(-330);
+    }
 };
