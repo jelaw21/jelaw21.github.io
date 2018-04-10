@@ -45,11 +45,11 @@ function create(){
 
     hitBox.on('pointerdown', registerHit);
 
-    this.tweens.add({
+    accuracy = this.tweens.add({
         targets: hitBox,
         scaleX: 10,
+        scaleY: 10,
         duration: 3000,
-
         yoyo: true,
         repeat: -1
     })
@@ -62,7 +62,7 @@ function update(){
 
 function registerHit(pointer) {
     var distance = Phaser.Math.Distance.Between(this.x, this.y, pointer.x, pointer.y);
-    content = ["SpritePos: " + this.x + " , " + this.y, "Clicked: " + pointer.x + " , " + pointer.y, "Distance: " + distance];
+    content = ["SpritePos: " + this.x + " , " + this.y, "Clicked: " + pointer.x + " , " + pointer.y, "Distance: " + distance, "Progress: " + accuracy.progress];
     clickText.setText(content);
 
 }
