@@ -52,8 +52,6 @@ function update(){
 
 function registerHit(sprite, pointer){
 
-    
-
-
+    clickText.setText("Clicked" + pointer.x + " , " + pointer.y);
 
 }
