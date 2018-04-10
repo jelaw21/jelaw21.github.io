@@ -69,6 +69,11 @@ function update(){
 
 function registerHit(pointer) {
     var distance = Phaser.Math.Distance.Between(this.x, this.y, pointer.x, pointer.y);
+
+    console.log("Distance: " + distance);
+    console.log("Size of Sprite: " + this.width + " , " + this.height);
+    console.log("Scale of Sprite" + this.getScaleX());
+
     
     var scale = this.scaleX - 5;
     console.log(distance);
