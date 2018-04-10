@@ -45,6 +45,13 @@ function create(){
 
     hitBox.on('pointerdown', registerHit);
 
+    this.tweens.add({
+        target: hitBox,
+        scaleX: 10,
+        duration: 3000,
+        yoyo: true
+    })
+
 
 };
 function update(){
