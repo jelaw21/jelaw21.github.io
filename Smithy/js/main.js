@@ -45,7 +45,7 @@ function create(){
 
     hitBox.on('pointerdown', registerHit);
 
-    accuracy = this.tweens.add({
+    this.tweens.add({
         targets: hitBox,
         scaleX: 10,
         scaleY: 10,
