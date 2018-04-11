@@ -72,13 +72,16 @@ function registerHit(pointer) {
     var accuracy = (this.scaleX - diff_scale)/diff_scale;
     var precision = distance/(this.width * max_scale/2);
 
-    if(Math.abs(accuracy - precision) < 0.10){
+    console.log(accuracy);
+    console.log(precision);
+
+    if(accuracy < 0.10 && precision < 0.10){
         comment = "LEGEND"
-    }else if(Math.abs(accuracy - precision)< 0.20){
+    }else if(accuracy < 0.20 && precision < .20){
         comment = "GREAT"
-    }else if(Math.abs(accuracy - precision) < .30){
+    }else if(accuracy < .30 && precision < .30){
         comment = "GOOD"
-    }else if(Math.abs(accuracy - precision) < .40){
+    }else if(accuracy < .40 && precision < .40){
         comment = "OK"
     }else
         comment = "";
