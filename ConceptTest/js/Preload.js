@@ -1,4 +1,4 @@
-var Test = Test || {};
+/*var Test = Test || {};
 
 Test.Preload = function(){};
 
@@ -32,4 +32,4 @@ Test.Preload.prototype = {
     create:function(){
         this.time.events.add(Phaser.Timer.SECOND * 10,  this.state.start('MainMenu'), this);
     }
-};
+};*/

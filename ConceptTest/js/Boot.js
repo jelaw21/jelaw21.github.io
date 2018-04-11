@@ -1,4 +1,8 @@
-var Test = Test || {};
+
+
+
+
+/*var Test = Test || {};
 
 Test.Boot = function(){};
 
@@ -19,4 +23,4 @@ Test.Boot.prototype = {
         this.state.start('Preload');
     }
 
-};
+};*/

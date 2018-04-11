@@ -1,4 +1,4 @@
-var Test = Test || {};
+/*var Test = Test || {};
 
 Test.MainMenu = function(){};
 
@@ -20,4 +20,4 @@ Test.MainMenu.prototype = {
         }
     }
 
-};
+};*/

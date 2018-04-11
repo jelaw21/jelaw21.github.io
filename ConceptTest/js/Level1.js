@@ -1,4 +1,4 @@
-Test = Test || {};
+/*Test = Test || {};
 
 Test.Level1 = function(){};
 
@@ -49,4 +49,4 @@ Test.Level1.prototype = {
 
 
 
-};
+};*/
