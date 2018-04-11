@@ -18,11 +18,6 @@ var config = {
 
 var game = new Phaser.Game(config);
 var clickText;
-var OK = 0;
-var GOOD = 1;
-var GREAT = 2;
-var LEGEND = 3;
-var praise = ["OK", 'GOOD', 'GREAT', 'LEGEND'];
 
 function preload() {
     this.load.image('background', 'assets/PNG/panel_brown.png');
@@ -45,7 +40,7 @@ function create(){
     var hitBox = this.add.image(0, 0, 'hitspotFore').setInteractive().setScale(5);
     Phaser.Display.Align.In.Center(hitBoxEdge, background);
     Phaser.Display.Align.In.Center(hitBox, background);
-    var content = ["Hit the CENTER of the gray target"," at its MAXIMUM point"];
+    var content = ["Hit the CENTER of the gray target"," at its MINIMUM point"];
     clickText = this.add.text(16, 16, content , {fontSize: '32px'});
 
 
@@ -69,37 +64,24 @@ function update(){
 
 function registerHit(pointer) {
     var distance = Phaser.Math.Distance.Between(this.x, this.y, pointer.x, pointer.y);
+    var max_scale = 10;
+    var min_scale = 5;
+    var diff_scale = max_scale - min_scale;
+    var comment;
 
-    console.log("Distance: " + distance);
-    console.log("Size of Sprite: " + this.width + " , " + this.height);
-    console.log("Scale of Sprite" + this.scaleX);
+    var accuracy = (this.scaleX - diff_scale)/diff_scale;
+    var precision = distance/(this.width * max_scale/2);
 
-    
-    var scale = this.scaleX - 5;
-    console.log(distance);
-    var accuracy;
-    var precision;
-    if(distance > this.width/2 * .8){
-        precision = OK;
-    }else if (distance > this.width/2 * .4){
-        precision = GOOD;
-    }else if (distance > this.width/2 * .15){
-        precision = GREAT;
-    }else{
-        precision = LEGEND;
-    }
-
-    if(scale < 0.5 ){
-        accuracy = OK;
-    }else if(scale < 1.5){
-        accuracy = GOOD;
-    }else if(scale < 3.5){
-        accuracy = GREAT;
-    }else{
-        accuracy = LEGEND;
-    }
-
-    var comment = praise[Math.round((precision + accuracy) / 2)];
+    if(Math.abs(accuracy - precision) < 0.10){
+        comment = "LEGEND"
+    }else if(Math.abs(accuracy - precision)< 0.20){
+        comment = "GREAT"
+    }else if(Math.abs(accuracy - precision) < .30){
+        comment = "GOOD"
+    }else if(Math.abs(accuracy - precision) < .40){
+        comment = "OK"
+    }else
+        comment = "";
 
     //content = ["SpritePos: " + this.x + " , " + this.y, "Clicked: " + pointer.x + " , " + pointer.y, "Distance: " + distance, "Progress: " + this.scaleX];
     clickText.setText(comment);
