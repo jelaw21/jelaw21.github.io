@@ -1,8 +1,7 @@
 var scenes = [];
 
-scenes.push(Boot);
 scenes.push(PreloadScene);
-//scenes.push('MainMenu');
+scenes.push(MainMenu);
 //scenes.push('Level1');
 //scenes.push('Level2');
 
