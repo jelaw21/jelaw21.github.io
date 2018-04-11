@@ -1,4 +1,18 @@
+class Boot extends Phaser.Scene {
 
+    constructor(config){
+        super({key: 'Boot'});
+    }
+
+    preload(){
+        this.load.image('logo', 'assets/images/gwkLogo.png');
+        this.load.image('preloadbar', 'assets/images/gwkPreloadBar.png');
+    }
+    create(){
+        this.scene.start('Preload');
+    }
+
+}
 
 
 

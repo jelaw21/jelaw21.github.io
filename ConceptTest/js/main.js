@@ -1,10 +1,10 @@
 var scenes = [];
 
-scenes.push('Boot');
-scenes.push('Preload');
-scenes.push('MainMenu');
-scenes.push('Level1');
-scenes.push('Level2');
+scenes.push(Boot);
+scenes.push(PreloadScene);
+//scenes.push('MainMenu');
+//scenes.push('Level1');
+//scenes.push('Level2');
 
 var config = {
     type: Phaser.AUTO,
@@ -14,11 +14,6 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-
-
-
-
-
 
 /*var Test = Test || {};
 
