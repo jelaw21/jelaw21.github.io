@@ -72,7 +72,7 @@ function registerHit(pointer) {
 
     console.log("Distance: " + distance);
     console.log("Size of Sprite: " + this.width + " , " + this.height);
-    console.log("Scale of Sprite" + this.getScaleX());
+    console.log("Scale of Sprite" + this.scaleX);
 
     
     var scale = this.scaleX - 5;
