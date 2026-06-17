@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONFALL — Encounter Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+  :root {
+    --bg: #0D1B2A;
+    --parchment: #F0F4F8;
+    --parchment-dark: #DDE6F0;
+    --ink: #1C2B3A;
+    --ink-mid: #4A6070;
+    --ink-light: #8A9CAA;
+    --brown: #6B4423;
+    --brown-light: #8B5A2B;
+    --brown-dark: #4A2E14;
+    --blue: #1E4D7B;
+    --blue-light: #2A6098;
+    --blue-pale: #A8C8E8;
+    --border: #7B9BB8;
+    --gold: #D4A96A;
+    --red: #8B0000;
+    --red-light: #C00000;
+    --green: #2D6A2D;
+    --green-light: #3D8B3D;
+    --tray-bg: #091520;
+    --card-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Source Sans 3', sans-serif;
+    color: var(--ink);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0D1B2A 0%, #1E4D7B 50%, #0D1B2A 100%);
+    border-bottom: 2px solid var(--brown);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 3px;
+  }
+
+  header h1 span { color: var(--blue-pale); }
+
+  .header-divider { width: 1px; height: 28px; background: var(--border); opacity: 0.4; }
+
+  .round-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 14px;
+  }
+
+  .round-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--blue-pale);
+    letter-spacing: 2px;
+    opacity: 0.7;
+  }
+
+  .round-num {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+    min-width: 28px;
+    text-align: center;
+  }
+
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.15s;
+  }
+
+  .btn-primary { background: var(--brown); color: var(--gold); border-color: var(--brown-light); }
+  .btn-primary:hover { background: var(--brown-light); }
+  .btn-blue { background: var(--blue); color: var(--blue-pale); border-color: var(--blue-light); }
+  .btn-blue:hover { background: var(--blue-light); }
+  .btn-ghost { background: transparent; color: var(--blue-pale); border-color: var(--border); opacity: 0.6; }
+  .btn-ghost:hover { opacity: 1; }
+  .btn-red { background: var(--red); color: white; border-color: var(--red-light); }
+  .btn-red:hover { background: var(--red-light); }
+  .btn-sm { padding: 3px 8px; font-size: 10px; }
+
+  .header-actions { margin-left: auto; display: flex; gap: 8px; }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── CANVAS ── */
+  .canvas {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+  }
+
+  .canvas-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+    pointer-events: none;
+    gap: 12px;
+  }
+
+  .canvas-empty-icon { font-size: 48px; }
+
+  .canvas-empty-text {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: var(--blue-pale);
+    letter-spacing: 2px;
+  }
+
+  .canvas-empty-sub {
+    font-family: 'Crimson Text', serif;
+    font-size: 14px;
+    color: var(--blue-pale);
+    font-style: italic;
+  }
+
+  .drop-zone {
+    min-height: 100px;
+    border: 2px dashed rgba(123,155,184,0.3);
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .drop-zone.drag-over {
+    border-color: var(--gold);
+    background: rgba(212,169,106,0.05);
+  }
+
+  /* ── ENCOUNTER CARD ── */
+  .encounter-card {
+    background: var(--parchment);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .encounter-card.dead {
+    opacity: 0.4;
+    filter: grayscale(0.6);
+  }
+
+  .encounter-card.critical {
+    border-color: var(--red-light);
+    box-shadow: 0 0 12px rgba(139,0,0,0.4);
+    animation: pulse-red 2s infinite;
+  }
+
+  @keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 12px rgba(139,0,0,0.4); }
+    50% { box-shadow: 0 0 20px rgba(192,0,0,0.7); }
+  }
+
+  .card-top {
+    background: linear-gradient(90deg, var(--brown-dark), var(--brown));
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: grab;
+  }
+
+  .card-top:active { cursor: grabbing; }
+
+  .drag-handle {
+    color: var(--gold);
+    opacity: 0.5;
+    font-size: 14px;
+    cursor: grab;
+  }
+
+  .card-name {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1px;
+    flex: 1;
+  }
+
+  .card-level {
+    font-family: 'Crimson Text', serif;
+    font-size: 12px;
+    color: var(--gold);
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  .card-type {
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.5;
+    font-style: italic;
+  }
+
+  .initiative-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(0,0,0,0.3);
+    color: var(--gold);
+    border: 1px solid rgba(212,169,106,0.3);
+    border-radius: 3px;
+    padding: 2px 6px;
+  }
+
+  .card-remove {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 4px;
+    transition: color 0.15s;
+  }
+
+  .card-remove:hover { color: var(--red-light); }
+
+  .card-body {
+    padding: 10px 12px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  /* ── EXHAUST SECTION ── */
+  .exhaust-section { flex: 1; }
+
+  .exhaust-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .exhaust-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--ink-mid);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    width: 52px;
+    flex-shrink: 0;
+  }
+
+  .exhaust-num {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 700;
+    min-width: 36px;
+    text-align: right;
+    transition: color 0.3s;
+  }
+
+  .exhaust-bar-wrap {
+    flex: 1;
+    height: 12px;
+    background: rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .exhaust-bar-fill {
+    height: 100%;
+    border-radius: 1px;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+
+  .exhaust-btns {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .exhaust-quick {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 6px;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.15s;
+  }
+
+  .exhaust-add { background: var(--green); color: white; border-color: var(--green-light); }
+  .exhaust-add:hover { background: var(--green-light); }
+  .exhaust-sub { background: var(--red); color: white; border-color: var(--red-light); }
+  .exhaust-sub:hover { background: var(--red-light); }
+
+  .custom-exhaust {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .custom-input {
+    width: 44px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 3px 4px;
+    background: white;
+    outline: none;
+  }
+
+  /* ── FATAL INJURIES ── */
+  .fatal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 110px;
+  }
+
+  .fatal-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--red);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .fatal-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--parchment-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .fatal-box:hover { background: rgba(139,0,0,0.08); }
+  .fatal-box.active { background: rgba(139,0,0,0.2); border-color: var(--red); }
+
+  .fatal-dot {
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .fatal-box.active .fatal-dot { background: var(--red); border-color: var(--red); }
+
+  .fatal-text {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    color: var(--ink-mid);
+  }
+
+  /* ── CONDITIONS ON CARD ── */
+  .conditions-section {
+    padding: 0 12px 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    min-height: 28px;
+  }
+
+  .cond-tag {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(30,77,123,0.15);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2px 8px 2px 6px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    color: var(--blue);
+    font-weight: 600;
+  }
+
+  .cond-tag.dot { background: rgba(139,60,20,0.12); color: var(--brown); border-color: var(--brown-light); }
+
+  .cond-remove {
+    background: transparent;
+    border: none;
+    color: var(--ink-light);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 0;
+    line-height: 1;
+    margin-left: 2px;
+  }
+
+  .cond-remove:hover { color: var(--red); }
+
+  .add-cond-btn {
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .add-cond-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ── CONDITION PICKER ── */
+  .cond-picker {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    padding: 8px;
+    z-index: 1000;
+    width: 260px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .cond-picker.open { display: flex; }
+
+  .cond-opt {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--ink);
+    background: var(--parchment-dark);
+    transition: all 0.15s;
+  }
+
+  .cond-opt:hover { background: var(--blue); color: white; border-color: var(--blue); }
+
+  /* ── TRAY ── */
+  .tray {
+    width: 280px;
+    background: var(--tray-bg);
+    border-left: 2px solid var(--brown);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .tray-header {
+    background: linear-gradient(90deg, var(--brown-dark), var(--brown));
+    padding: 12px 16px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .tray-search {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(123,155,184,0.2);
+    flex-shrink: 0;
+  }
+
+  .tray-search input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(123,155,184,0.3);
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    color: var(--blue-pale);
+    outline: none;
+  }
+
+  .tray-search input::placeholder { color: rgba(168,200,232,0.3); }
+  .tray-search input:focus { border-color: var(--gold); }
+
+  .tray-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  .tray-band {
+    margin-bottom: 8px;
+    border: 1px solid rgba(123,155,184,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .tray-band-header {
+    background: rgba(30,77,123,0.3);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .tray-band-header:hover { background: rgba(30,77,123,0.5); }
+
+  .tray-band-name {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .tray-band-levels {
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    color: var(--blue-pale);
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .tray-band-chevron {
+    color: var(--gold);
+    opacity: 0.5;
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+
+  .tray-band.open .tray-band-chevron { transform: rotate(90deg); }
+
+  .tray-monsters {
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    background: rgba(0,0,0,0.2);
+  }
+
+  .tray-band.open .tray-monsters { display: flex; }
+
+  .tray-monster {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(15,30,45,0.8);
+    cursor: grab;
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .tray-monster:hover { background: rgba(30,77,123,0.3); }
+  .tray-monster:active { cursor: grabbing; }
+
+  .tray-monster-info { flex: 1; }
+
+  .tray-monster-name {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--blue-pale);
+  }
+
+  .tray-monster-sub {
+    font-family: 'Crimson Text', serif;
+    font-size: 11px;
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  .tray-add-btn {
+    background: var(--blue);
+    color: var(--blue-pale);
+    border: none;
+    border-radius: 3px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .tray-add-btn:hover { background: var(--blue-light); }
+
+  .tray-add-all {
+    width: 100%;
+    margin-top: 1px;
+    background: rgba(107,68,35,0.3);
+    border: none;
+    padding: 6px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .tray-add-all:hover { background: rgba(107,68,35,0.6); }
+
+  /* ── INITIATIVE LIST ── */
+  .initiative-bar {
+    background: rgba(0,0,0,0.4);
+    border-bottom: 1px solid rgba(123,155,184,0.2);
+    padding: 6px 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    flex-shrink: 0;
+    min-height: 38px;
+  }
+
+  .init-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--blue-pale);
+    opacity: 0.5;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    margin-right: 4px;
+  }
+
+  .init-chip {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+    color: var(--blue-pale);
+    background: rgba(30,77,123,0.2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .init-chip:hover { background: rgba(30,77,123,0.5); }
+  .init-chip.current { background: var(--gold); color: var(--brown-dark); border-color: var(--gold); }
+  .init-chip.dead { opacity: 0.3; text-decoration: line-through; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+  ::-webkit-scrollbar-thumb { background: rgba(123,155,184,0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(123,155,184,0.5); }
+
+  /* ── ALL DEAD ── */
+  .encounter-end {
+    text-align: center;
+    padding: 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>IRON<span>FALL</span></h1>
+  <div class="header-divider"></div>
+  <div class="round-display">
+    <div class="round-label">ROUND</div>
+    <div class="round-num" id="roundNum">1</div>
+    <button class="btn btn-primary btn-sm" onclick="nextRound()">Next →</button>
+  </div>
+  <div class="header-divider"></div>
+  <div id="encounterStatus" style="font-family:Crimson Text,serif;font-size:13px;color:var(--blue-pale);opacity:0.6;font-style:italic">
+    Drag monsters from the tray to begin
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-ghost btn-sm" onclick="sortByInitiative()">Sort Initiative</button>
+    <button class="btn btn-red btn-sm" onclick="clearEncounter()">Clear Encounter</button>
+  </div>
+</header>
+
+<!-- INITIATIVE BAR -->
+<div class="initiative-bar" id="initiativeBar">
+  <div class="init-label">INITIATIVE</div>
+  <div style="font-family:Crimson Text,serif;font-size:12px;color:var(--blue-pale);opacity:0.3;font-style:italic">Add monsters to see initiative order</div>
+</div>
+
+<div class="layout">
+  <!-- CANVAS -->
+  <div class="canvas" id="canvas"
+    ondragover="event.preventDefault();document.getElementById('canvas').classList.add('drag-over')"
+    ondragleave="document.getElementById('canvas').classList.remove('drag-over')"
+    ondrop="handleCanvasDrop(event)">
+    <div class="canvas-empty" id="canvasEmpty">
+      <div class="canvas-empty-icon">⚔</div>
+      <div class="canvas-empty-text">ENCOUNTER CANVAS</div>
+      <div class="canvas-empty-sub">Drag monsters from the tray on the right</div>
+    </div>
+    <div class="encounter-end" id="encounterEnd">⚔ ALL ENEMIES DEFEATED ⚔</div>
+  </div>
+
+  <!-- TRAY -->
+  <div class="tray">
+    <div class="tray-header">Monster Tray</div>
+    <div class="tray-search">
+      <input type="text" placeholder="Search monsters..." oninput="filterTray(this.value)" id="traySearch">
+    </div>
+    <div class="tray-list" id="trayList"></div>
+  </div>
+</div>
+
+<!-- CONDITION PICKER (global overlay) -->
+<div class="cond-picker" id="condPicker"></div>
+
+<script>
+// ── MONSTER DATA ──────────────────────────────────────────────────────────
+
+const BANDS = [
+  {
+    name: 'The Goblin Band', levels: 'L1–2',
+    monsters: [
+      { name: 'Goblin Skirmisher', movement: '35ft', level: 'Level 1', type: 'Small Humanoid', initiative: 8, armor: 2, expertise: 2, willpower: 0, isBoss: false,
+        abilities: ['Blade Edge','Pack Tactics'] },
+      { name: 'Goblin Bruiser', movement: '25ft', level: 'Level 2', type: 'Small Humanoid', initiative: 8, armor: 5, expertise: 4, willpower: 0, isBoss: false,
+        abilities: ['Battered Grip','Daze','Reckless Swing'] },
+      { name: 'Goblin Shaman', movement: '30ft', level: 'Level 2', type: 'Small Humanoid', initiative: 9, armor: 1, expertise: 0, willpower: 4, isBoss: false,
+        abilities: ['Spark','Burning Touch','Flame Burst','Hex'] },
+      { name: 'Goblin Boss', movement: '35ft', level: 'Level 2', type: 'Small Humanoid', initiative: 10, armor: 6, expertise: 3, willpower: 1, isBoss: true,
+        abilities: ['Blade Edge','Spark','Veteran\'s Grit','Not Today','You There Fight!'] },
+    ]
+  },
+  {
+    name: 'The Undead Patrol', levels: 'L2',
+    monsters: [
+      { name: 'Skeleton Warrior', movement: '30ft', level: 'Level 2', type: 'Medium Undead', initiative: 9, armor: 4, expertise: 4, willpower: 0, isBoss: false,
+        abilities: ['Blade Edge','Opening Strike','Veteran\'s Grit','Undead Resilience','Relentless Bones'] },
+      { name: 'Skeleton Archer', movement: '30ft', level: 'Level 2', type: 'Medium Undead', initiative: 10, armor: 2, expertise: 4, willpower: 0, isBoss: false,
+        abilities: ['Pinning Shot','Veteran\'s Grit','Undead Resilience','Dead Aim'] },
+      { name: 'Zombie', movement: '20ft', level: 'Level 2', type: 'Medium Undead', initiative: 5, armor: 1, expertise: 2, willpower: 2, isBoss: false,
+        abilities: ['Brawler','Death Tap','Leech','Undead Resilience','Grapple','Shambling Advance'] },
+    ]
+  },
+  {
+    name: 'Orc Scouting Party', levels: 'L2–4',
+    monsters: [
+      { name: 'Orc Scout', movement: '35ft', level: 'Level 2', type: 'Medium Humanoid', initiative: 7, armor: 2, expertise: 3, willpower: 1, isBoss: false,
+        abilities: ['Pinning Throw','Veteran\'s Grit','Blood Rage','Three Javelins'] },
+      { name: 'Orc Scout Leader', movement: '30ft', level: 'Level 4', type: 'Medium Humanoid', initiative: 8, armor: 3, expertise: 4, willpower: 2, isBoss: false,
+        abilities: ['Pinning Throw','Veteran\'s Grit','Taunt','Healing Touch','Blood Rage','Rally'] },
+    ]
+  },
+  {
+    name: 'Orc Squad', levels: 'L3–5',
+    monsters: [
+      { name: 'Orc Soldier', movement: '25ft', level: 'Level 3', type: 'Medium Humanoid', initiative: 7, armor: 4, expertise: 4, willpower: 2, isBoss: false,
+        abilities: ['Veteran\'s Grit','Hew','Cleave','Spark','Burning Touch','Blood Rage'] },
+      { name: 'Orc Bruiser', movement: '25ft', level: 'Level 4', type: 'Medium Humanoid', initiative: 6, armor: 5, expertise: 6, willpower: 2, isBoss: false,
+        abilities: ['Veteran\'s Grit','Battered Grip','Daze','Crushing Blow','Blood Rage','No Escape'] },
+      { name: 'Skull Weaver', movement: '30ft', level: 'Level 5', type: 'Medium Humanoid', initiative: 9, armor: 2, expertise: 2, willpower: 6, isBoss: false,
+        abilities: ['Shadow Spike','Unravel','Silence','Fear','Static Shock','Charged','Blood Rage','Hex'] },
+    ]
+  },
+  {
+    name: 'Orc Warband', levels: 'L5–6',
+    monsters: [
+      { name: 'Orc Warrior', movement: '25ft', level: 'Level 5', type: 'Medium Humanoid', initiative: 8, armor: 5, expertise: 8, willpower: 2, isBoss: false,
+        abilities: ['Veteran\'s Grit','Second Attack','Hew','Cleave','Whirlwind','Rend','Blood Rage','Bloodscent'] },
+      { name: 'Orc Archer', movement: '35ft', level: 'Level 5', type: 'Medium Humanoid', initiative: 14, armor: 3, expertise: 8, willpower: 2, isBoss: false,
+        abilities: ['Veteran\'s Grit','Second Attack','Steady Draw','Called Shot','Pinning Shot','Blood Rage','Ten Arrows'] },
+      { name: 'Blood Caller', movement: '30ft', level: 'Level 6', type: 'Medium Humanoid', initiative: 9, armor: 2, expertise: 2, willpower: 10, isBoss: false,
+        abilities: ['Shadow Spike','Unravel','Deep Unravel','Silence','Fear','Spark','Burning Touch','Flame Burst','Blood Rage','Blood Ritual'] },
+      { name: 'Orc Warchief', movement: '25ft', level: 'Level 6', type: 'Large Humanoid', initiative: 9, armor: 7, expertise: 8, willpower: 2, isBoss: true,
+        abilities: ['Veteran\'s Grit','Second Attack','Imposing','Oppressive','Retaliate','Violent Shove','Spark','Burning Touch','Blood Rage','Warchief\'s Command','Last Stand'] },
+    ]
+  },
+];
+
+const ABILITY_DESCRIPTIONS = {
+  // Expertise Ladder
+  "Veteran's Grit": "Can use Disengage as a Maneuver instead of an Action",
+  "Second Attack": "Make a second attack as part of your Action",
+  // Short Blades
+  "Blade Edge": "On a hit, deal an additional 1d4 Exhaust",
+  "Opening Strike": "On a hit, fatal blow threshold for next attack drops to 18. If Fatal Blow, exhaust roll instead.",
+  "Riposte": "When an attacker misses, use Reaction to make an attack",
+  "Lethal Edge": "On a hit, deal an additional 2d4 Exhaust, replaces Blade Edge",
+  "Vulnerable Strike": "Fatal blow threshold drops to 18 vs Staggered, Rooted, or Crippled targets",
+  "Death's Edge": "Riposte fatal blow threshold drops to 18",
+  // Bludgeons
+  "Battered Grip": "+1 Armor while wielding a bludgeon weapon",
+  "Daze": "On a hit, target gains Stagger until their next turn",
+  "Crushing Blow": "As a Maneuver, make an attack. On a hit, Sunder 1 until end of round. Fatal Blow = Sunder 1 permanently.",
+  "Iron Grip": "+2 Armor while wielding a bludgeon weapon, replaces Battered Grip",
+  "Concussive Blow": "On a hit, target suffers −3 to their next attack roll",
+  "Skull Crusher": "Fatal blow threshold drops to 18 if target's Armor is 0",
+  // Axes
+  "Hew": "On a hit, target suffers Bleed 2 for 3 rounds",
+  "Cleave": "On a hit, deal half Exhaust to an adjacent enemy",
+  "Whirlwind": "Once per battle, attack all enemies in melee range simultaneously",
+  "Rend": "On a hit, target suffers Bleed 4 for 3 rounds, replaces Hew",
+  "Punishing Strike": "On a hit, target gains Weaken 2 for 2 rounds",
+  "Executioner": "Against targets with 70+ Exhaust, fatal blow threshold drops to 17",
+  // Heavy Weapons
+  "Imposing": "Enemies within melee range suffer −2 to attack rolls",
+  "Oppressive": "Enemies within melee range suffer −3 to attack rolls, replaces Imposing",
+  "Retaliate": "When an attacker misses, use Reaction to attack. Hit = Cripple 2 for 3 rounds. Fatal Blow = Cripple 2 permanently.",
+  "Violent Shove": "On a hit, target gains Knockback 10. If pushed into ally range, ally may use Reaction to attack at threshold 18.",
+  "Obliterate": "On a fatal blow, all adjacent enemies are Staggered",
+  "Stun": "Once per battle, on a hit, target cannot take an Action or Reaction until end of their next turn",
+  // Polearms
+  "Piercing Thrust": "+1 Armor Penetration on all polearm attacks",
+  "Penetrating Thrust": "+2 Armor Penetration on all polearm attacks, replaces Piercing Thrust",
+  "Reach": "When an enemy moves into reach, use Reaction to attack. On a hit, deal Exhaust and target cannot finish their move action.",
+  "Trip": "On a hit, target falls Prone — next attack gains +3. If Fatal Blow, Exhaust roll instead.",
+  "Devastating Lunge": "Use Maneuver to move one space, attack within reach, then return to original space",
+  "Hook": "As a Maneuver, attack at Short range. No Exhaust, not Fatal. On a hit, Pull 15. If pulled into reach, immediately attack at threshold 18.",
+  // Archery
+  "Steady Hand": "Fatal Injuries only apply −3 attack penalty",
+  "Steady Draw": "Fatal Injuries apply no attack penalty, replaces Steady Hand",
+  "Called Shot": "On hit, apply Cripple 3 until end of target's next turn",
+  "Pinning Shot": "On hit, target cannot move until their next turn",
+  "Volley": "Once per battle, fire at all enemies in a zone simultaneously at −2",
+  "Killshot": "Against targets with 60+ Exhaust, any hit is a fatal blow",
+  // Shields
+  "Shield Wall": "+1 Armor while a shield is equipped",
+  "Iron Fortress": "+2 Armor while a shield is equipped, replaces Shield Wall",
+  "Deflect": "When an adjacent ally takes Exhaust, use Reaction to prevent half",
+  "Shield Bash": "Use Maneuver to attack with shield (2d4, applies Stagger on hit)",
+  "Bulwark": "Once per battle, reduce one Fatal Injury to a regular Exhaust roll",
+  "Counter Wall": "After a Deflect, immediately make a Shield Bash as a free action",
+  // Unarmed
+  "Brawler": "Unarmed attacks deal 2d6 Exhaust",
+  "Iron Fist": "Unarmed attacks deal 3d6 Exhaust, replaces Brawler",
+  "Grapple": "On a hit, target is Restrained. To break free, deal 10 Exhaust to the Zombie.",
+  "Disarm": "On a hit, target drops weapon — must spend an Action to retrieve it",
+  "Pin": "While Grappling, target deals 5 Exhaust per round until they break free",
+  "Haymaker": "On a hit, if roll is 15–19, target is Stunned and Prone",
+  // Thrown
+  "Quick Draw": "Thrown weapon attacks may be made as a Maneuver",
+  "Pinning Throw": "On hit, target cannot move until their next turn",
+  "Vital Throw": "On hit, target loses their Reaction until end of their next turn",
+  "Flurry": "Once per round, make two thrown weapon attacks as a single Maneuver",
+  "Crippling Throw": "On hit, apply Cripple 2 until end of target's next turn",
+  "Exploit": "On hit, if target has no Reaction, next attack against them has fatal blow threshold of 18",
+  // Flame
+  "Spark": "Deal 2d10 Exhaust at Short range. No Exhaust cost.",
+  "Burning Touch": "All Flame hits apply Burn 2 for 3 rounds",
+  "Flame Burst": "Spark attack vs all enemies in a 5ft Burst at Close range",
+  "Searing Ray": "Spark attack vs all enemies in a 30x5ft Line",
+  "Immolate": "Burn upgrades to Burn 4, replaces Burning Touch",
+  "Conflagration": "When an enemy takes Burn Exhaust, use Reaction to Spark an adjacent enemy",
+  "Inferno": "Spark at threshold 18. On Fatal Blow, trigger Flame Burst centered on target.",
+  // Frost
+  "Frost Bolt": "Deal 2d10 Exhaust at Short range. No Exhaust cost.",
+  "Chill": "All Frost hits apply Weaken 1 until target's next turn",
+  "Deep Freeze": "All Frost hits apply Weaken 2, replaces Chill",
+  "Ice Lance": "Frost Bolt vs all targets in a 6x3ft Line",
+  "Freeze": "On hit, target gains Stun and Root until their next turn",
+  "Flash Freeze": "Freeze attack vs all enemies in a 10ft Burst at Short range",
+  "Glacial Tomb": "Frost Bolt attacks against Stunned targets have fatal blow threshold of 16",
+  // Storm
+  "Static Shock": "Deal 2d10 Exhaust at Short range. No Exhaust cost.",
+  "Charged": "All Storm hits apply Knockback 5",
+  "Overcharged": "All Storm hits apply Knockback 10, replaces Charged",
+  "Lightning Bolt": "Static Shock vs all targets in a 30x5ft Line. All targets gain Stagger.",
+  "Chain Lightning": "On hit, one adjacent enemy auto-takes Static Shock. If adjacent to a third, they do too.",
+  "Thunderclap": "Static Shock vs all enemies in a 10ft Burst at Close range. All gain Stagger.",
+  "Tempest": "Static Shock vs all enemies in a 15ft Burst at Short range. All gain Prone.",
+  // Shadow
+  "Shadow Spike": "Deal 2d10 Exhaust at Short range. No Exhaust cost.",
+  "Unravel": "All Shadow Spike hits apply Unravel 1",
+  "Deep Unravel": "All Shadow Spike hits apply Unravel 2, replaces Unravel",
+  "Silence": "Shadow Spike attack. On a hit, target cannot use Willpower-based abilities until their next turn.",
+  "Fear": "After hitting with Shadow Spike, use Maneuver to cast Fear. Target must flee until start of your next turn.",
+  "Curse": "Shadow Spike attack. On a hit, target suffers −2 to all rolls until end of battle.",
+  "Void Strike": "Shadow Spike attack. If target Willpower ≤8, cannot be countered and ignores Armor.",
+  // Holy
+  "Radiant Bolt": "Deal 2d10 Exhaust at Short range. No Exhaust cost.",
+  "Healing Touch": "As a Reaction, when an ally takes Exhaust, prevent 2 Exhaust.",
+  "Divine Grace": "As a Reaction, when an ally takes Exhaust, prevent 5 Exhaust. Replaces Healing Touch.",
+  "Smite": "After using Healing Touch, use Maneuver to take an Action against the attacker.",
+  "Fortify": "As a Maneuver, grant one ally +3 Armor until start of your next turn.",
+  "Last Rites": "Once per battle, reduce one ally's Fatal Injury to a regular Exhaust roll.",
+  "Divine Intervention": "On a Fatal Blow, reduce an ally within Short range Exhaust by 20.",
+  // Nature
+  "Thorn": "Deal 2d10 Exhaust at Short range. No Exhaust cost.",
+  "Venom": "All Thorn hits apply Poison 2",
+  "Toxic Bloom": "All Thorn hits apply Poison 4, replaces Venom",
+  "Entangle": "Thorn attack vs all in 10ft Burst at Short range. Cannot be Fatal. All hit gain Root.",
+  "Thorn Wall": "Reaction: raise a 15x5ft wall of thorns. Enemies moving through deal 4 Exhaust.",
+  "Verdant Drain": "Thorn attack. On hit, if target Poisoned, one ally reduces Exhaust equal to Poison value each tick.",
+  "Wrath of the Wild": "At cost of 20 Exhaust, 20ft Aura. Enemies Rooted + 2d6 Exhaust. Allies reduce Exhaust by 10.",
+  // Necromancy
+  "Death Tap": "Deal 2d10 Exhaust at Short range. No Exhaust cost.",
+  "Leech": "All Death Tap hits reduce your Exhaust by 2",
+  "Vampiric": "All Death Tap hits reduce your Exhaust by 4, replaces Leech",
+  "Wither": "Death Tap attack. On a hit, target suffers Wither 2 for 3 rounds.",
+  "Raise Fallen": "Once per battle, raise a recently killed enemy. It moves 15ft and attacks once, then collapses.",
+  "Death Coil": "Death Tap attack. If target has 70+ Exhaust, fatal blow threshold drops to 16.",
+  "Army of the Dead": "At cost of 20 Exhaust, raise 2 killed enemies. For 3 rounds each moves and attacks once.",
+  // Arcane
+  "Force Dart": "Deal 3d8 Exhaust at Short range. No Exhaust cost.",
+  "Overload": "All Force Dart hits apply Stagger until target's next turn",
+  "Overcharge": "All Force Dart hits apply Stagger and Cripple 1, replaces Overload",
+  "Concussive Blast": "Force Dart attack. On hit, Knockback 10. Adjacent enemies auto-deal 1d6 Exhaust ignoring Armor.",
+  "Spellbreaker": "Force Dart attack. On hit, target loses one spell group ability until end of battle.",
+  "Force Wave": "Force Dart vs all enemies in a 15x5ft Line originating from the target.",
+  "Annihilate": "At cost of 20 Exhaust, deal 4d6 Exhaust. Cannot be countered by Willpower abilities.",
+  // Monster Abilities
+  "Pack Tactics": "Gains +2 to attack rolls when another Goblin is adjacent to the target",
+  "Reckless Swing": "Once per battle, +4 to attack roll but −3 Armor until next turn",
+  "Hex": "Once per battle as a Maneuver, one target suffers −2 to all rolls until this dies or battle ends",
+  "Not Today": "Once per battle when taking a Fatal Injury, immediately Disengage for free and move to max range",
+  "You There Fight!": "Once per battle as a Maneuver, command a nearby ally to immediately make a free attack",
+  "Undead Resilience": "Immune to Poison and Frostbite. Cannot be Frightened.",
+  "Relentless Bones": "Once per battle, when this monster would take a Fatal Injury, loses 20 Exhaust instead and keeps fighting",
+  "Dead Aim": "If this monster does not move on its turn, gains +2 to attack roll",
+  "Shambling Advance": "Cannot be Knocked Back, Knocked Prone, or Rooted. Always moves toward nearest enemy at start of turn.",
+  "Blood Rage": "When this Orc lands a Fatal Blow, all adjacent Orcs gain +2 to their next attack roll",
+  "Three Javelins": "Carries exactly 3 javelins. Track usage. When depleted, falls back to unarmed or Thorn.",
+  "Rally": "Once per battle as a Maneuver, all Orc Scouts in the encounter gain +2 to their next attack roll",
+  "No Escape": "If a target Disengages from this monster, use Reaction to make a free Spark attack against them",
+  "Bloodscent": "Gains +2 to attack rolls against any target with 50+ Exhaust",
+  "Ten Arrows": "Carries exactly 10 arrows. Track usage. When depleted, falls back to Thorn attacks.",
+  "Blood Ritual": "Once per battle, when any Orc lands a Fatal Blow, immediately cast Flame Burst as a free Reaction",
+  "Warchief's Command": "Once per round as a free action, command one Orc to immediately move up to their full speed toward an enemy",
+  "Last Stand": "When this monster takes its first Fatal Injury, all Orcs in the encounter gain +2 to their next attack roll",
+  "Taunt": "As a Maneuver, target one enemy. That enemy must direct their next attack at you.",
+  "Field Medicine": "As a Maneuver, stabilize one Fatal Injury on an adjacent ally.",
+};
+
+const CONDITIONS_HAVE_VAL = ['Bleed','Burn','Poison','Frostbite','Wither','Root','Cripple','Sunder','Weaken','Curse'];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+
+let encounter = [];
+let round = 1;
+let currentInitIdx = 0;
+let activeMonsterId = null;
+let dragData = null;
+let idCounter = 1;
+
+function makeInstance(monster) {
+  return {
+    id: idCounter++,
+    ...JSON.parse(JSON.stringify(monster)),
+    exhaust: 0,
+    fatalInjuries: monster.isBoss ? [false, false, false] : [false],
+    conditions: [],
+    dead: false,
+  };
+}
+
+// ── TRAY ─────────────────────────────────────────────────────────────────
+
+function renderTray(filter = '') {
+  const list = document.getElementById('trayList');
+  const q = filter.toLowerCase();
+
+  list.innerHTML = BANDS.map((band, bi) => {
+    const filtered = band.monsters.filter(m => !q || m.name.toLowerCase().includes(q) || band.name.toLowerCase().includes(q));
+    if (!filtered.length) return '';
+
+    return `
+      <div class="tray-band ${!q ? 'open' : 'open'}" id="band-${bi}">
+        <div class="tray-band-header" onclick="toggleBand(${bi})">
+          <div>
+            <div class="tray-band-name">${band.name}</div>
+            <div class="tray-band-levels">${band.levels}</div>
+          </div>
+          <div class="tray-band-chevron">▶</div>
+        </div>
+        <div class="tray-monsters">
+          ${filtered.map((m, mi) => `
+            <div class="tray-monster" draggable="true"
+              ondragstart="startDrag(event, ${bi}, ${band.monsters.indexOf(m)})">
+              <div class="tray-monster-info">
+                <div class="tray-monster-name">${m.name}${m.isBoss ? ' ★' : ''}</div>
+                <div class="tray-monster-sub">${m.level} · Init ${m.initiative} · Armor ${m.armor}</div>
+              </div>
+              <button class="tray-add-btn" onclick="addToEncounter(${bi}, ${band.monsters.indexOf(m)})">+</button>
+            </div>
+          `).join('')}
+          <button class="tray-add-all" onclick="addBandToEncounter(${bi})">+ Add Entire Band</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleBand(bi) {
+  const el = document.getElementById(`band-${bi}`);
+  if (el) el.classList.toggle('open');
+}
+
+function filterTray(q) {
+  renderTray(q);
+}
+
+function startDrag(event, bandIdx, monsterIdx) {
+  dragData = { bandIdx, monsterIdx };
+  event.dataTransfer.effectAllowed = 'copy';
+}
+
+function handleCanvasDrop(event) {
+  event.preventDefault();
+  document.getElementById('canvas').classList.remove('drag-over');
+  if (dragData) {
+    addToEncounter(dragData.bandIdx, dragData.monsterIdx);
+    dragData = null;
+  }
+}
+
+function addToEncounter(bandIdx, monsterIdx) {
+  const monster = BANDS[bandIdx].monsters[monsterIdx];
+  encounter.push(makeInstance(monster));
+  renderEncounter();
+}
+
+function addBandToEncounter(bandIdx) {
+  BANDS[bandIdx].monsters.forEach((m, mi) => addToEncounter(bandIdx, mi));
+}
+
+// ── ENCOUNTER RENDER ─────────────────────────────────────────────────────
+
+function renderEncounter() {
+  const canvas = document.getElementById('canvas');
+  const empty = document.getElementById('canvasEmpty');
+  const end = document.getElementById('encounterEnd');
+  const status = document.getElementById('encounterStatus');
+
+  empty.style.display = encounter.length ? 'none' : 'flex';
+
+  const allDead = encounter.length > 0 && encounter.every(m => m.dead);
+  end.style.display = allDead ? 'block' : 'none';
+
+  status.textContent = encounter.length
+    ? `${encounter.filter(m=>!m.dead).length} active · ${encounter.filter(m=>m.dead).length} defeated`
+    : 'Drag monsters from the tray to begin';
+
+  // Remove old cards
+  canvas.querySelectorAll('.encounter-card').forEach(el => el.remove());
+
+  encounter.forEach(m => {
+    const card = buildCard(m);
+    canvas.insertBefore(card, end);
+  });
+
+  renderInitiativeBar();
+}
+
+function buildCard(m) {
+  const exhaust = m.exhaust;
+  const pct = Math.min(100, exhaust);
+  const exhaustColor = exhaust >= 80 ? '#C00000' : exhaust >= 50 ? '#B8860B' : '#2D8B2D';
+
+  const card = document.createElement('div');
+  card.className = `encounter-card${m.dead ? ' dead' : ''}${exhaust >= 80 && !m.dead ? ' critical' : ''}`;
+  card.id = `card-${m.id}`;
+  card.setAttribute('draggable', 'true');
+  card.addEventListener('dragstart', e => { dragData = { reorder: true, id: m.id }; });
+
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="drag-handle">⠿</span>
+      <div class="card-name">${m.name}${m.isBoss ? ' <span style="color:var(--gold);font-size:11px">★ BOSS</span>' : ''}</div>
+      <div class="card-level">${m.level}</div>
+      <div class="initiative-badge">Init ${m.initiative}</div>
+      <button class="card-remove" onclick="removeFromEncounter(${m.id})" title="Remove">✕</button>
+    </div>
+    <div style="display:flex;gap:0;border-bottom:1px solid rgba(0,0,0,0.1)">
+      ${['EXP','WIL','ARM','INIT','MOVE'].map((label, i) => {
+        const vals = [m.expertise||0, m.willpower||0, m.armor, m.initiative, m.movement||'30ft'];
+        return '<div style="flex:1;text-align:center;padding:6px 4px;background:' + (i%2===0?'rgba(0,0,0,0.04)':'rgba(0,0,0,0.02)') + ';border-right:1px solid rgba(0,0,0,0.08)">' +
+          '<div style="font-family:Cinzel,serif;font-size:9px;font-weight:600;color:var(--ink-mid);letter-spacing:1px">' + label + '</div>' +
+          '<div style="font-family:Cinzel,serif;font-size:16px;font-weight:700;color:var(--brown)">' + vals[i] + '</div>' +
+          '</div>';
+      }).join('')}
+    </div>
+    <div style="padding:4px 12px 6px;border-bottom:1px solid rgba(0,0,0,0.08)">
+      <div style="font-family:Cinzel,serif;font-size:9px;font-weight:600;color:var(--ink-mid);letter-spacing:1px;margin-bottom:3px">ABILITIES</div>
+      <div style="display:flex;flex-wrap:wrap;gap:3px" id="abilities-${m.id}">
+        ${(m.abilities||[]).map(a => {
+          const desc = ABILITY_DESCRIPTIONS[a] || '';
+          return '<span style="font-family:Source Sans 3,sans-serif;font-size:10px;font-weight:600;padding:2px 7px;background:rgba(30,77,123,0.08);border:1px solid rgba(30,77,123,0.2);border-radius:3px;color:var(--blue);cursor:pointer;user-select:none;transition:all 0.15s" ' +
+            'onclick="toggleAbilityDesc(this,\'' + a.replace(/'/g,"\'") + '\',' + m.id + ')" ' +
+            'title="' + desc.replace(/"/g,'&quot;') + '">' + a + '</span>';
+        }).join('')}
+      </div>
+      <div id="ability-desc-${m.id}" style="display:none;margin-top:6px;padding:6px 8px;background:rgba(30,77,123,0.06);border:1px solid rgba(30,77,123,0.15);border-radius:3px;font-family:Crimson Text,serif;font-size:13px;color:var(--ink-mid);font-style:italic;line-height:1.4"></div>
+    </div>
+
+    <div class="card-body">
+      <div class="exhaust-section">
+        <div class="exhaust-row">
+          <div class="exhaust-label">Exhaust</div>
+          <div class="exhaust-num" style="color:${exhaustColor}">${exhaust}</div>
+          <div class="exhaust-bar-wrap">
+            <div class="exhaust-bar-fill" style="width:${pct}%;background:${exhaustColor}"></div>
+          </div>
+          <div style="font-family:Cinzel,serif;font-size:10px;color:var(--ink-mid);opacity:0.6">/100</div>
+        </div>
+        ${exhaust >= 100 ? '<div style="font-family:Cinzel,serif;font-size:10px;color:var(--red);font-weight:700;letter-spacing:1px;margin-bottom:4px">⚔ ALL HITS ARE FATAL BLOWS</div>' : ''}
+        <div class="exhaust-btns">
+          ${[1,2,5,10].map(n=>`<button class="exhaust-quick exhaust-add" onclick="changeExhaust(${m.id},${n})">+${n}</button>`).join('')}
+          ${[1,5,10].map(n=>`<button class="exhaust-quick exhaust-sub" onclick="changeExhaust(${m.id},-${n})">-${n}</button>`).join('')}
+        </div>
+        <div class="custom-exhaust">
+          <input class="custom-input" type="number" id="custom-${m.id}" value="5" min="1" max="100">
+          <button class="exhaust-quick exhaust-add btn-sm" onclick="changeExhaust(${m.id},+document.getElementById('custom-${m.id}').value)">+</button>
+          <button class="exhaust-quick exhaust-sub btn-sm" onclick="changeExhaust(${m.id},-document.getElementById('custom-${m.id}').value)">-</button>
+          <button class="exhaust-quick btn-sm" style="background:#555;color:white;border-color:#333" onclick="setExhaust(${m.id},0)">Reset</button>
+        </div>
+      </div>
+
+      <div class="fatal-section">
+        <div class="fatal-label">Fatal Injuries</div>
+        ${m.isBoss ?
+          m.fatalInjuries.map((fi, i) => `
+            <div class="fatal-box ${fi?'active':''}" onclick="toggleFatal(${m.id},${i})">
+              <div class="fatal-dot"></div>
+              <div class="fatal-text">Injury ${i+1}${i===2?' — Death':''}</div>
+            </div>
+          `).join('') :
+          `<div class="fatal-box ${m.fatalInjuries[0]?'active':''}" onclick="toggleFatal(${m.id},0)">
+              <div class="fatal-dot"></div>
+              <div class="fatal-text">Fatal Injury — Death</div>
+            </div>`
+        }
+      </div>
+    </div>
+
+    <div class="conditions-section" id="conds-${m.id}">
+      ${m.conditions.map(c => `
+        <div class="cond-tag ${CONDITIONS_HAVE_VAL.includes(c.name)?'dot':''}">
+          ${c.name}${c.val?' '+c.val:''}
+          <button class="cond-remove" onclick="removeCondition(${m.id},'${c.name}')">✕</button>
+        </div>
+      `).join('')}
+      <button class="add-cond-btn" onclick="openCondPicker(event,${m.id})">+ Condition</button>
+    </div>
+  `;
+
+  return card;
+}
+
+function renderInitiativeBar() {
+  const bar = document.getElementById('initiativeBar');
+  if (!encounter.length) {
+    bar.innerHTML = '<div class="init-label">INITIATIVE</div><div style="font-family:Crimson Text,serif;font-size:12px;color:var(--blue-pale);opacity:0.3;font-style:italic">Add monsters to see initiative order</div>';
+    return;
+  }
+
+  const sorted = [...encounter].sort((a,b) => b.initiative - a.initiative);
+  bar.innerHTML = '<div class="init-label">INITIATIVE ORDER</div>' +
+    sorted.map((m, i) => `
+      <div class="init-chip ${m.dead?'dead':''} ${i===currentInitIdx%sorted.length&&!m.dead?'current':''}"
+        onclick="scrollToCard(${m.id})">
+        ${m.initiative} · ${m.name.split(' ').pop()}
+      </div>
+    `).join('') +
+    '<div style="margin-left:8px;font-family:Cinzel,serif;font-size:10px;color:var(--blue-pale);opacity:0.3;letter-spacing:1px">↑ HIGHEST GOES FIRST</div>';
+}
+
+// ── ACTIONS ──────────────────────────────────────────────────────────────
+
+function changeExhaust(id, delta) {
+  const m = encounter.find(m => m.id === id);
+  if (!m) return;
+  m.exhaust = Math.max(0, Math.min(100, m.exhaust + parseInt(delta)));
+  renderEncounter();
+}
+
+function setExhaust(id, val) {
+  const m = encounter.find(m => m.id === id);
+  if (!m) return;
+  m.exhaust = val;
+  renderEncounter();
+}
+
+function toggleFatal(id, idx) {
+  const m = encounter.find(m => m.id === id);
+  if (!m) return;
+  m.fatalInjuries[idx] = !m.fatalInjuries[idx];
+  if (m.isBoss) {
+    m.dead = m.fatalInjuries[2] === true;
+  } else {
+    m.dead = m.fatalInjuries[0] === true;
+  }
+  renderEncounter();
+}
+
+function removeFromEncounter(id) {
+  encounter = encounter.filter(m => m.id !== id);
+  renderEncounter();
+}
+
+function clearEncounter() {
+  if (encounter.length && !confirm('Clear the encounter?')) return;
+  encounter = [];
+  round = 1;
+  currentInitIdx = 0;
+  document.getElementById('roundNum').textContent = '1';
+  renderEncounter();
+}
+
+function nextRound() {
+  round++;
+  document.getElementById('roundNum').textContent = round;
+  // Tick DoT conditions
+  let dotMessages = [];
+  encounter.forEach(m => {
+    if (m.dead) return;
+    m.conditions.forEach(c => {
+      if (CONDITIONS_HAVE_VAL.includes(c.name) && c.val) {
+        const dot = parseInt(c.val) || 0;
+        if (['Bleed','Burn','Poison','Frostbite','Wither'].includes(c.name) && dot > 0) {
+          m.exhaust = Math.min(100, m.exhaust + dot);
+          dotMessages.push(`${m.name} takes ${dot} Exhaust from ${c.name}`);
+        }
+      }
+    });
+  });
+  currentInitIdx++;
+  renderEncounter();
+  if (dotMessages.length) {
+    setTimeout(() => alert('DoT Tick:\n' + dotMessages.join('\n')), 100);
+  }
+}
+
+function sortByInitiative() {
+  encounter.sort((a,b) => b.initiative - a.initiative);
+  renderEncounter();
+}
+
+function scrollToCard(id) {
+  const el = document.getElementById(`card-${id}`);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ── CONDITIONS ────────────────────────────────────────────────────────────
+
+function openCondPicker(event, monsterId) {
+  event.stopPropagation();
+  activeMonsterId = monsterId;
+  const picker = document.getElementById('condPicker');
+  picker.classList.add('open');
+  const rect = event.target.getBoundingClientRect();
+  picker.style.top = (rect.bottom + 4) + 'px';
+  picker.style.left = rect.left + 'px';
+}
+
+function addCondition(id, name) {
+  const m = encounter.find(m => m.id === id);
+  if (!m) return;
+  const hasVal = CONDITIONS_HAVE_VAL.includes(name);
+  let val = '';
+  if (hasVal) {
+    val = prompt(`${name} value (e.g. 2 for ${name} 2):`, '2') || '';
+  }
+  if (!m.conditions.find(c => c.name === name)) {
+    m.conditions.push({ name, val });
+  }
+  document.getElementById('condPicker').classList.remove('open');
+  activeMonsterId = null;
+  renderEncounter();
+}
+
+function removeCondition(id, name) {
+  const m = encounter.find(m => m.id === id);
+  if (!m) return;
+  m.conditions = m.conditions.filter(c => c.name !== name);
+  renderEncounter();
+}
+
+document.addEventListener('click', e => {
+  const picker = document.getElementById('condPicker');
+  if (!e.target.closest('#condPicker') && !e.target.closest('.add-cond-btn')) {
+    picker.classList.remove('open');
+    activeMonsterId = null;
+  }
+});
+
+// ── ABILITY TOGGLE ───────────────────────────────────────────────────────
+// Track active abilities per monster
+const activeAbilities = {};
+
+function toggleAbilityDesc(el, abilityName, monsterId) {
+  const desc = ABILITY_DESCRIPTIONS[abilityName] || 'No description available.';
+  const descBox = document.getElementById('ability-desc-' + monsterId);
+
+  if (!activeAbilities[monsterId]) activeAbilities[monsterId] = {};
+
+  if (activeAbilities[monsterId][abilityName]) {
+    // Deactivate
+    delete activeAbilities[monsterId][abilityName];
+    el.style.background = 'rgba(30,77,123,0.08)';
+    el.style.color = 'var(--blue)';
+    el.style.borderColor = 'rgba(30,77,123,0.2)';
+  } else {
+    // Activate
+    activeAbilities[monsterId][abilityName] = desc;
+    el.style.background = 'rgba(107,68,35,0.2)';
+    el.style.color = 'var(--brown)';
+    el.style.borderColor = 'var(--brown-light)';
+  }
+
+  // Rebuild description box with all active abilities
+  const active = activeAbilities[monsterId];
+  const keys = Object.keys(active);
+  if (keys.length === 0) {
+    descBox.style.display = 'none';
+  } else {
+    descBox.style.display = 'block';
+    descBox.innerHTML = keys.map(k =>
+      '<div style="padding:3px 0;border-bottom:1px dotted rgba(0,0,0,0.1);line-height:1.4">' +
+      '<strong style="font-style:normal;color:var(--brown)">' + k + ':</strong> ' + active[k] +
+      '</div>'
+    ).join('');
+  }
+}
+
+// ── BUILD CONDITION PICKER ───────────────────────────────────────────────
+function buildCondPicker() {
+  const picker = document.getElementById('condPicker');
+  const conds = ['Bleed','Burn','Poison','Frostbite','Wither','Stagger','Stun','Root','Slow','Cripple','Sunder','Weaken','Silence','Prone','Restrained','Curse','Blind'];
+  picker.innerHTML = conds.map(c =>
+    '<div class="cond-opt" onclick="addCondition(activeMonsterId,\'' + c + '\')">' + c + '</div>'
+  ).join('');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+buildCondPicker();
+renderTray();
+renderEncounter();
+</script>
+</body>
+</html>

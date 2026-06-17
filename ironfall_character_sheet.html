@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONFALL — Character Manager</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+  :root {
+    --parchment: #F0F4F8;
+    --parchment-dark: #DDE6F0;
+    --ink: #1C2B3A;
+    --ink-mid: #4A6070;
+    --ink-light: #8A9CAA;
+    --blood: #8B6914;
+    --blood-light: #B8860B;
+    --gold: #5B8DB8;
+    --gold-light: #A8C8E8;
+    --leather: #6B4423;
+    --leather-mid: #4A2E14;
+    --border: #7B9BB8;
+    --shadow: rgba(0,0,40,0.25);
+    --bg: #0D1B2A;
+    --tab-active: #6B4423;
+    --tab-inactive: #2A1A0A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(30,77,123,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(107,68,35,0.2) 0%, transparent 60%);
+    color: var(--ink);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0D1B2A 0%, #1E4D7B 50%, #0D1B2A 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  }
+
+  header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #F5DEB3;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(90,160,220,0.4);
+  }
+
+  header h1 span { color: var(--blood-light); }
+
+  .header-subtitle {
+    font-family: 'Crimson Text', serif;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    background: #091520;
+    border-bottom: 2px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    overflow-x: auto;
+  }
+
+  .tab {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #F5DEB3;
+    background: var(--tab-inactive);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    opacity: 0.6;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    top: 2px;
+  }
+
+  .tab:hover { opacity: 0.9; background: #3D1A00; }
+  .tab.active { background: var(--tab-active); opacity: 1; border-color: var(--gold); color: #F5DEB3; }
+
+  .tab-add {
+    font-size: 18px;
+    padding: 6px 12px;
+    color: var(--gold);
+    background: transparent;
+    border: 1px dashed var(--border);
+    opacity: 0.5;
+  }
+
+  .tab-add:hover { opacity: 1; }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--parchment);
+    border: 2px solid var(--border);
+    border-radius: 2px;
+    box-shadow: 0 4px 16px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.5);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: linear-gradient(90deg, #6B4423, #8B5A2B);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-header h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #F5DEB3;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .card-body { padding: 16px; }
+
+  /* ── IDENTITY ── */
+  .identity-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 4px; }
+
+  .field-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #6B4423;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .field-input {
+    font-family: 'Crimson Text', serif;
+    font-size: 18px;
+    color: var(--ink);
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 6px 10px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .field-input:focus { border-color: var(--gold); background: white; }
+
+  select.field-input {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238B4513'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+
+  /* ── STATS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+
+  .stat-box {
+    background: var(--parchment-dark);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+
+  .stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--ink-mid);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .stat-select {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #6B4423;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border);
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    padding: 2px 0;
+  }
+
+  .stat-select:focus { border-color: var(--gold); }
+
+  /* ── EXHAUST TRACKER ── */
+  .exhaust-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 16px;
+  }
+
+  .exhaust-track {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .exhaust-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .exhaust-value {
+    font-family: 'Cinzel', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #6B4423;
+    line-height: 1;
+  }
+
+  .exhaust-max {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    color: var(--ink-mid);
+  }
+
+  .exhaust-bar-container {
+    background: rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    height: 20px;
+    overflow: hidden;
+  }
+
+  .exhaust-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2d8b2d 0%, #8b8b00 50%, var(--blood) 100%);
+    background-size: 200% 100%;
+    transition: width 0.3s ease;
+    border-radius: 1px;
+  }
+
+  .exhaust-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-exhaust {
+    background: #2D6A2D;
+    color: white;
+    border-color: #1A4A1A;
+  }
+
+  .btn-exhaust:hover { background: #3D8B3D; }
+
+  .btn-reduce {
+    background: #8B0000;
+    color: white;
+    border-color: #6B0000;
+  }
+
+  .btn-reduce:hover { background: #C00000; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--leather);
+  }
+
+  .btn-ghost:hover { background: var(--parchment-dark); }
+
+  .exhaust-input {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    width: 60px;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 4px;
+    background: white;
+    outline: none;
+  }
+
+  /* ── FATAL INJURIES ── */
+  .fatal-injuries {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .fatal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #6B4423;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+
+  .fatal-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .fatal-item:hover { background: rgba(30,77,123,0.1); }
+  .fatal-item.active { background: rgba(139,0,0,0.2); border-color: #6B4423; }
+
+  .fatal-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #6B4423;
+    border-radius: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #6B4423;
+    flex-shrink: 0;
+  }
+
+  .fatal-text {
+    font-family: 'Crimson Text', serif;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .fatal-death {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: #6B4423;
+    font-weight: 700;
+  }
+
+  /* ── LADDER ── */
+  .ladder-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .ladder-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--parchment-dark);
+    opacity: 0.4;
+    transition: all 0.2s;
+  }
+
+  .ladder-item.unlocked { opacity: 1; background: rgba(107,68,35,0.1); border-color: #8B5A2B; }
+
+  .ladder-req {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--gold);
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 36px;
+  }
+
+  .ladder-name {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B4423;
+    display: block;
+  }
+
+  .ladder-desc {
+    font-family: 'Crimson Text', serif;
+    font-size: 12px;
+    color: var(--ink-mid);
+    font-style: italic;
+  }
+
+  /* ── CONDITIONS ── */
+  .conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .condition-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--parchment-dark);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .condition-item:hover { background: rgba(139,0,0,0.08); }
+  .condition-item.active { background: rgba(139,0,0,0.2); border-color: #6B4423; }
+
+  .condition-dot {
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .condition-item.active .condition-dot { background: var(--blood); border-color: #6B4423; }
+
+  .condition-name {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .condition-val {
+    font-size: 11px;
+    color: var(--ink-mid);
+    margin-left: auto;
+  }
+
+  .condition-input {
+    width: 28px;
+    font-size: 11px;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: white;
+    padding: 1px 2px;
+    outline: none;
+    margin-left: auto;
+  }
+
+  /* ── GROUPS ── */
+  .groups-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .group-card {
+    background: var(--parchment-dark);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .group-header {
+    background: rgba(107,68,35,0.2);
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .group-select {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #5B8DB8;
+    color: #6B4423;
+    font-weight: 700;
+    flex: 1;
+    outline: none;
+    cursor: pointer;
+    padding: 2px 0;
+  }
+
+  .tier-badges {
+    display: flex;
+    gap: 4px;
+  }
+
+  .tier-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--ink-mid);
+    background: transparent;
+    transition: all 0.2s;
+  }
+
+  .tier-badge.active { background: linear-gradient(90deg, #6B4423, #8B5A2B); color: #F5DEB3; border-color: var(--leather); }
+
+  .group-abilities {
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 60px;
+  }
+
+  .ability-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 4px 0;
+    border-bottom: 1px dotted rgba(139,69,19,0.3);
+  }
+
+  .ability-check {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--border);
+    border-radius: 1px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: white;
+    font-size: 10px;
+    color: var(--leather);
+  }
+
+  .ability-check.checked { background: linear-gradient(90deg, #6B4423, #8B5A2B); color: #F5DEB3; }
+
+  .ability-text { font-family: 'Crimson Text', serif; font-size: 13px; color: var(--ink); line-height: 1.3; }
+  .ability-name { font-weight: 600; color: #6B4423; }
+
+  /* ── EQUIPMENT ── */
+  .equipment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .equip-slot {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .equip-slot-header {
+    background: rgba(107,68,35,0.15);
+    padding: 6px 10px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--leather);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .equip-slot-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
+
+  /* ── NOTES ── */
+  .notes-area {
+    width: 100%;
+    min-height: 80px;
+    font-family: 'Crimson Text', serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: rgba(255,255,255,0.5);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 8px 10px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+  }
+
+  .notes-area:focus { border-color: var(--gold); background: white; }
+
+  /* ── DELETE CHAR ── */
+  .danger-zone {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(139,0,0,0.3);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-danger {
+    background: transparent;
+    color: #6B4423;
+    border: 1px solid var(--blood);
+    font-size: 10px;
+    opacity: 0.5;
+  }
+
+  .btn-danger:hover { opacity: 1; background: rgba(139,0,0,0.1); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: #F5DEB3;
+  }
+
+  .empty-state h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .empty-state p {
+    font-family: 'Crimson Text', serif;
+    font-size: 16px;
+    opacity: 0.5;
+    margin-bottom: 24px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #6B4423, #8B5A2B);
+    color: #F5DEB3;
+    border-color: var(--gold);
+    font-size: 13px;
+    padding: 10px 24px;
+  }
+
+  .btn-primary:hover { background: #7A3500; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .conditions-grid { grid-template-columns: repeat(2, 1fr); }
+    .groups-grid { grid-template-columns: 1fr; }
+    .equipment-grid { grid-template-columns: 1fr; }
+    .exhaust-layout { grid-template-columns: 1fr; }
+    .identity-grid { grid-template-columns: 1fr 1fr; }
+    .ladder-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>IRON<span>FALL</span></h1>
+    <div class="header-subtitle">Character Manager</div>
+  </div>
+  <button class="btn btn-ghost" style="font-size:11px;color:#A8C8E8;border-color:#A8C8E8;opacity:0.6;margin-right:8px" onclick="clearStorage()">Reset Storage</button><button class="btn btn-primary" onclick="addCharacter()">+ New Character</button>
+</header>
+
+<div class="tabs-bar" id="tabsBar"></div>
+
+<div class="main" id="mainContent"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+
+const WEAPON_GROUPS = ['Short Blades','Axes & Long Blades','Bludgeons','Heavy Weapons','Polearms','Archery','Shields','Unarmed','Thrown Weapons'];
+const SPELL_GROUPS = ['Flame','Frost','Storm','Shadow','Holy','Nature','Illusion','Necromancy','Arcane'];
+
+const ABILITIES = {
+  'Short Blades': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty']],
+    'Tier 1': [['PASSIVE: Blade Edge','On a hit, deal an additional 1d4 Exhaust'],['Opening Strike','On a hit, fatal blow threshold for next attack drops to 18. If Fatal Blow, exhaust roll instead.'],['Riposte','When an attacker misses, use Reaction to make an attack']],
+    'Tier 2': [['PASSIVE: Lethal Edge','On a hit, deal an additional 2d4 Exhaust, replaces Blade Edge'],['Vulnerable Strike','Fatal blow threshold drops to 18 vs Staggered, Rooted, or Crippled targets'],['Death\'s Edge','Riposte fatal blow threshold drops to 18']]
+  },
+  'Axes & Long Blades': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty']],
+    'Tier 1': [['PASSIVE: Hew','On a hit, target suffers Bleed 2 for 3 rounds'],['Cleave','On a hit, deal half Exhaust to an adjacent enemy'],['Whirlwind','Once per battle, attack all enemies in melee range simultaneously']],
+    'Tier 2': [['PASSIVE: Rend','On a hit, target suffers Bleed 4 for 3 rounds, replaces Hew'],['Punishing Strike','On a hit, target gains Weaken 2 for 2 rounds'],['Executioner','Against targets with 70+ Exhaust, fatal blow threshold drops to 17']]
+  },
+  'Bludgeons': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty']],
+    'Tier 1': [['PASSIVE: Battered Grip','+1 Armor while wielding a bludgeon weapon'],['Daze','On a hit, target gains Stagger until their next turn'],['Crushing Blow','As a Maneuver, make an attack. On a hit, Sunder 1 until end of round. Fatal Blow = Sunder 1 permanently.']],
+    'Tier 2': [['PASSIVE: Iron Grip','+2 Armor while wielding a bludgeon weapon, replaces Battered Grip'],['Concussive Blow','On a hit, target suffers −3 to their next attack roll'],['Skull Crusher','Fatal blow threshold drops to 18 if target\'s Armor is 0']]
+  },
+  'Heavy Weapons': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty. Cannot equip a shield. Maximum two attacks per turn.']],
+    'Tier 1': [['PASSIVE: Imposing','Enemies within melee range suffer −2 to attack rolls'],['Retaliate','When an attacker misses, use Reaction to attack. Hit = Cripple 2 for 3 rounds. Fatal Blow = Cripple 2 permanently.'],['Violent Shove','On a hit, target gains Knockback 10. If pushed into ally range, ally may use Reaction to attack at threshold 18.']],
+    'Tier 2': [['PASSIVE: Oppressive','Enemies within melee range suffer −3 to attack rolls, replaces Imposing'],['Obliterate','On a fatal blow, all adjacent enemies are Staggered'],['Stun','Once per battle, on a hit, target cannot take an Action or Reaction until end of their next turn']]
+  },
+  'Polearms': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty. Cannot equip a shield.']],
+    'Tier 1': [['PASSIVE: Piercing Thrust','+1 Armor Penetration on all polearm attacks'],['Reach','When an enemy moves into reach, use Reaction to attack. On a hit, roll for Exhaust and target cannot finish their move action.'],['Trip','On a hit, target falls Prone — next attack gains +3. If Fatal Blow, Exhaust roll instead.']],
+    'Tier 2': [['PASSIVE: Penetrating Thrust','+2 Armor Penetration on all polearm attacks, replaces Piercing Thrust'],['Devastating Lunge','Use Maneuver to move one space, attack a target within reach, then return to original space'],['Hook','As a Maneuver, attack a target within Short range. No Exhaust, not a Fatal Blow. On a hit, Pull 15. If pulled into reach, immediately attack at threshold 18.']]
+  },
+  'Archery': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty. Framework: 7 or lower = Miss | 8–16 = Hit (2d10) | 17+ = Fatal Blow']],
+    'Tier 1': [['PASSIVE: Steady Hand','Fatal Injuries only apply −3 attack penalty'],['Called Shot','On hit, apply Cripple 3 until end of target\'s next turn'],['Pinning Shot','On hit, target cannot move until their next turn']],
+    'Tier 2': [['PASSIVE: Steady Draw','Fatal Injuries apply no attack penalty, replaces Steady Hand'],['Volley','Once per battle, fire at all enemies in a zone simultaneously at −2'],['Killshot','Against targets with 60+ Exhaust, any hit is a fatal blow']]
+  },
+  'Shields': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty for shield bash attacks']],
+    'Tier 1': [['PASSIVE: Shield Wall','+1 Armor while a shield is equipped'],['Deflect','When an adjacent ally takes Exhaust, use Reaction to prevent half.'],['Shield Bash','Use Maneuver to attack with shield (2d4, applies Stagger on hit)']],
+    'Tier 2': [['PASSIVE: Iron Fortress','+2 Armor while a shield is equipped, replaces Shield Wall'],['Bulwark','Once per battle, reduce one Fatal Injury to a regular Exhaust roll'],['Counter Wall','After a Deflect, immediately make a Shield Bash as a free action']]
+  },
+  'Unarmed': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty. Unarmed attacks deal 1d6 Exhaust.']],
+    'Tier 1': [['PASSIVE: Brawler','Unarmed attacks deal 2d6 Exhaust'],['Grapple','On a hit, target is Restrained. To break free, deal 10 Exhaust to you.'],['Disarm','On a hit, target drops weapon — must spend an Action to retrieve it']],
+    'Tier 2': [['PASSIVE: Iron Fist','Unarmed attacks deal 3d6 Exhaust, replaces Brawler'],['Pin','While Grappling, target deals 5 Exhaust per round until they break free'],['Haymaker','On a hit, if roll is 15–19, target is Stunned and Prone']]
+  },
+  'Thrown Weapons': {
+    'Buy-in': [['Trained','Removes −4 unskilled penalty']],
+    'Tier 1': [['PASSIVE: Quick Draw','Thrown weapon attacks may be made as a Maneuver'],['Pinning Throw','On hit, target cannot move until their next turn'],['Vital Throw','On hit, target loses their Reaction until end of their next turn']],
+    'Tier 2': [['PASSIVE: Flurry','Once per round, make two thrown weapon attacks as a single Maneuver'],['Crippling Throw','On hit, apply Cripple 2 until end of target\'s next turn'],['Exploit','On hit, if target has no Reaction, next attack against them has fatal blow threshold of 18']]
+  },
+  'Flame': {
+    'Buy-in': [['Spark (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Burning Touch','All Flame hits apply Burn 2 for 3 rounds'],['Flame Burst','Spark attack vs all enemies in a 5ft Burst at Close range'],['Searing Ray','Spark attack vs all enemies in a 30x5ft Line']],
+    'Tier 2': [['PASSIVE: Immolate','Burn upgrades to Burn 4, replaces Burning Touch'],['Conflagration','When an enemy takes Burn Exhaust, use Reaction to make a Spark attack against an adjacent enemy'],['Inferno','Spark attack with fatal blow threshold of 18. On Fatal Blow, trigger Flame Burst centered on target.']]
+  },
+  'Frost': {
+    'Buy-in': [['Frost Bolt (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Chill','All Frost hits apply Weaken 1 until target\'s next turn'],['Ice Lance','Frost Bolt vs all targets in a 6x3ft Line'],['Freeze','On hit, target gains Stun and Root until their next turn. Flagged for playtesting.']],
+    'Tier 2': [['PASSIVE: Deep Freeze','All Frost hits apply Weaken 2, replaces Chill'],['Flash Freeze','Freeze attack vs all enemies in a 10ft Burst at Short range'],['Glacial Tomb','Frost Bolt attacks against Stunned targets have fatal blow threshold of 16']]
+  },
+  'Storm': {
+    'Buy-in': [['Static Shock (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Charged','All Storm hits apply Knockback 5'],['Lightning Bolt','Static Shock vs all targets in a 30x5ft Line. All targets gain Stagger.'],['Chain Lightning','Static Shock attack. On a hit, choose one adjacent enemy — they take a Static Shock. If adjacent to a third enemy, they also take a Static Shock.']],
+    'Tier 2': [['PASSIVE: Overcharged','All Storm hits apply Knockback 10, replaces Charged'],['Thunderclap','Static Shock vs all enemies in a 10ft Burst at Close range. All targets gain Stagger.'],['Tempest','Static Shock vs all enemies in a 15ft Burst at Short range. All targets gain Prone.']]
+  },
+  'Shadow': {
+    'Buy-in': [['Shadow Spike (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Unravel','All Shadow Spike hits apply Unravel 1'],['Silence','Shadow Spike attack. On a hit, target cannot use Willpower-based abilities until their next turn.'],['Fear','After hitting with Shadow Spike, use Maneuver to cast Fear. Target must Disengage and move away until start of your next turn.']],
+    'Tier 2': [['PASSIVE: Deep Unravel','All Shadow Spike hits apply Unravel 2, replaces Unravel'],['Curse','Shadow Spike attack. On a hit, target suffers −2 to all rolls until end of battle.'],['Void Strike','Shadow Spike attack. If target\'s Willpower is 8 or below, this attack cannot be countered and ignores Armor entirely. Flagged for playtesting.']]
+  },
+  'Holy': {
+    'Buy-in': [['Radiant Bolt (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Healing Touch','As a Reaction, when an ally takes Exhaust, prevent 2 Exhaust. During Long Rest, treat 1 Fatal Injury per ally.'],['Smite','After using Healing Touch, use Maneuver to take an Action against the attacker.'],['Fortify','As a Maneuver, grant one ally +3 Armor until start of your next turn.']],
+    'Tier 2': [['PASSIVE: Divine Grace','As a Reaction, when an ally takes Exhaust, prevent 5 Exhaust. During Long Rest, treat 2 Fatal Injuries per ally. Replaces Healing Touch.'],['Last Rites','Once per battle, reduce one ally\'s Fatal Injury to a regular Exhaust roll.'],['Divine Intervention','On a Fatal Blow, reduce an ally within Short range Exhaust by 20.']]
+  },
+  'Nature': {
+    'Buy-in': [['Thorn (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Venom','All Thorn hits apply Poison 2'],['Entangle','Thorn attack vs all enemies in a 10ft Burst at Short range. Cannot be Fatal Blow. All enemies hit gain Root until start of your next turn.'],['Thorn Wall','When an enemy moves adjacent to an ally, use Reaction to raise a 15x5ft wall of thorns. Enemies moving into or out of adjacency deal 4 Exhaust.']],
+    'Tier 2': [['PASSIVE: Toxic Bloom','All Thorn hits apply Poison 4, replaces Venom'],['Verdant Drain','Thorn attack. On a hit, if target is Poisoned, one ally reduces Exhaust equal to the Poison value each time the target takes Poison Exhaust.'],['Wrath of the Wild','At the cost of 20 Exhaust, raise a 20ft Aura. Enemies Rooted and deal 2d6 Exhaust. Allies reduce Exhaust by 10.']]
+  },
+  'Illusion': {
+    'Buy-in': [['Flicker (free)','As a Maneuver, create a brief illusion. Next attack against you this round suffers −3. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Blur','All attack rolls against you suffer −2'],['Mirror Image','As a Maneuver, create a decoy. Next attack hits the image — attacker deals 1d10 Exhaust to themselves.'],['Phantom Step','As a Maneuver, move up to 15ft without triggering Reactions or opportunity attacks.']],
+    'Tier 2': [['PASSIVE: Mirage','All attack rolls against you suffer −4, replaces Blur'],['Mass Confusion','All enemies in a 15ft Burst at Short range must attack a random target on their next turn, including allies.'],['Shatter Reality','At the cost of 20 Exhaust, project an illusion of yourself onto an enemy within Short range. All enemies adjacent to that target must attack them as if they were you. After attacks resolve, the illusion shatters.']]
+  },
+  'Necromancy': {
+    'Buy-in': [['Death Tap (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Leech','All Death Tap hits reduce your Exhaust by 2'],['Wither','Death Tap attack. On a hit, target suffers Wither 2 for 3 rounds.'],['Raise Fallen','Once per battle, raise a recently killed enemy. On your next turn it moves 15ft toward the nearest enemy and makes one attack, then collapses.']],
+    'Tier 2': [['PASSIVE: Vampiric','All Death Tap hits reduce your Exhaust by 4, replaces Leech'],['Death Coil','Death Tap attack. If target has 70+ Exhaust, fatal blow threshold drops to 16.'],['Army of the Dead','At the cost of 20 Exhaust, raise up to 2 recently killed enemies. For 3 rounds, each moves 15ft toward nearest enemy and attacks once. After 3 rounds they collapse.']]
+  },
+  'Arcane': {
+    'Buy-in': [['Force Dart (free)','Deal 3d8 Exhaust at Short range. No Exhaust cost.']],
+    'Tier 1': [['PASSIVE: Overload','All Force Dart hits apply Stagger until target\'s next turn'],['Concussive Blast','Force Dart attack. On a hit, target gains Knockback 10. All adjacent enemies automatically deal 1d6 Exhaust, ignoring Armor.'],['Spellbreaker','Force Dart attack. On a hit, target loses access to one spell group ability until end of battle.']],
+    'Tier 2': [['PASSIVE: Overcharge','All Force Dart hits apply Stagger and Cripple 1, replaces Overload'],['Force Wave','Force Dart attack vs all enemies in a 15x5ft Line originating from the target.'],['Annihilate','At the cost of 20 Exhaust, deal 4d6 Exhaust. Cannot be countered or reduced by any ability cast using Willpower.']]
+  }
+};
+
+const EXPERTISE_LADDER = [
+  { req: 3, name: "Veteran's Grit", desc: "Disengage as a Maneuver instead of an Action" },
+  { req: 6, name: "Second Attack", desc: "Make a second attack as part of your Action" },
+  { req: 9, name: "Weapon Mastery", desc: "Once per battle, reroll one Exhaust roll and take the higher result. Unlocks Dual Wielding." },
+  { req: 12, name: "Warrior's Dodge", desc: "Once per battle, completely negate one attack" },
+  { req: 15, name: "Hardened", desc: "Reduce all incoming Exhaust by 2 (minimum 1)" },
+  { req: 18, name: "Third Attack", desc: "Make a third attack as part of your Action" },
+  { req: 20, name: "Apex Warrior", desc: "Escalation bonus doubles — +2 per 10 Exhaust taken" },
+];
+
+const WILLPOWER_LADDER = [
+  { req: 2, name: "First Spell", desc: "Buy-in spell cast for free" },
+  { req: 4, name: "Focused Mind", desc: "Casting cost reduced from 5 to 3 Exhaust" },
+  { req: 6, name: "Iron Will", desc: "Immune to Silence and Unravel" },
+  { req: 8, name: "Second Spell", desc: "As a Maneuver, cast one additional single-target spell" },
+  { req: 12, name: "Spell Mastery", desc: "Casting cost reduced from 3 to 1 Exhaust" },
+  { req: 16, name: "Third Spell", desc: "As a Maneuver, cast a second additional single-target spell" },
+  { req: 20, name: "Arcane Apex", desc: "Spell attacks gain +2 to roll" },
+];
+
+const INTUITION_LADDER = [
+  { req: 3, name: "Sixth Sense", desc: "Intuition triggers grant +2 to follow-up skill checks" },
+  { req: 6, name: "Try Again", desc: "Once per day, reroll any failed adventuring skill check" },
+  { req: 9, name: "Keen Eye", desc: "Any skill check with at least 1 point invested auto-succeeds at DR 8 or lower" },
+  { req: 12, name: "Gut Check", desc: "Once per battle, an attack that would hit you misses instead — pure instinct" },
+  { req: 15, name: "Sharpened Sense", desc: "Intuition trigger bonus increases from +2 to +4" },
+  { req: 18, name: "First Read", desc: "Always acts first in round one of combat regardless of initiative roll" },
+  { req: 20, name: "Razor Instinct", desc: "Roll 2d20 on every adventuring skill check, keep the better result" },
+];
+
+const SKILLS = [
+  'Thievery', 'Influence', 'Animal Handling', 'Wilderness Survival',
+  'Streetwise', 'Lore', 'Athletics', 'Stealth'
+];
+
+const CONDITIONS = [
+  { name: 'Bleed', hasVal: true },
+  { name: 'Burn', hasVal: true },
+  { name: 'Poison', hasVal: true },
+  { name: 'Frostbite', hasVal: true },
+  { name: 'Wither', hasVal: true },
+  { name: 'Stagger', hasVal: false },
+  { name: 'Stun', hasVal: false },
+  { name: 'Root', hasVal: true },
+  { name: 'Slow', hasVal: false },
+  { name: 'Cripple', hasVal: true },
+  { name: 'Sunder', hasVal: true },
+  { name: 'Weaken', hasVal: true },
+  { name: 'Silence', hasVal: false },
+  { name: 'Prone', hasVal: false },
+  { name: 'Restrained', hasVal: false },
+  { name: 'Curse', hasVal: true },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+
+function defaultChar(name = 'New Character') {
+  return {
+    id: Date.now() + Math.random(),
+    name,
+    race: '',
+    level: 1,
+    expertise: 0,
+    willpower: 0,
+    intuition: 0,
+    initiative: 10,
+    armor: 0,
+    exhaust: 0,
+    fatalInjuries: [false, false, false],
+    conditions: {},
+    weaponGroups: [
+      { group: '', tier: 'Buy-in', abilities: {} },
+    ],
+    spellGroups: [
+      { group: '', tier: 'Buy-in', abilities: {} },
+    ],
+    hybridAbilities: {},
+    weapon1: '', weapon1dice: '', weapon1tags: '',
+    weapon2: '', weapon2dice: '', weapon2tags: '',
+    armorName: '', armorVal: '',
+    notes: '',
+    skills: {},
+  };
+}
+
+let state = { chars: [], activeId: null };
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('ironfall-chars');
+    if (saved) {
+      state = JSON.parse(saved);
+      if (!state.chars.length) addCharacter(false);
+    } else {
+      addCharacter(false);
+    }
+  } catch {
+    addCharacter(false);
+  }
+  render();
+}
+
+let saveTimer = null;
+function saveState() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem('ironfall-chars', JSON.stringify(state));
+    } catch(e) {
+      console.log('Save failed:', e);
+    }
+  }, 400);
+}
+
+function getActive() {
+  return state.chars.find(c => c.id === state.activeId);
+}
+
+function addCharacter(doRender = true) {
+  const c = defaultChar(`Character ${state.chars.length + 1}`);
+  state.chars.push(c);
+  state.activeId = c.id;
+  if (doRender) { render(); saveState(); }
+}
+
+function deleteCharacter(id) {
+  if (!confirm('Delete this character? This cannot be undone.')) return;
+  state.chars = state.chars.filter(c => c.id !== id);
+  if (state.chars.length === 0) addCharacter(false);
+  state.activeId = state.chars[0].id;
+  render(); saveState();
+}
+
+function update(field, value) {
+  const c = getActive();
+  if (!c) return;
+  const keys = field.split('.');
+  let obj = c;
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (keys[i].includes('[')) {
+      const [k, idx] = keys[i].replace(']','').split('[');
+      obj = obj[k][parseInt(idx)];
+    } else {
+      obj = obj[keys[i]];
+    }
+  }
+  obj[keys[keys.length - 1]] = value;
+  saveState();
+}
+
+function updateExhaust(delta) {
+  const c = getActive();
+  if (!c) return;
+  c.exhaust = Math.max(0, Math.min(100, c.exhaust + delta));
+  render(); saveState();
+}
+
+function toggleFatal(idx) {
+  const c = getActive();
+  if (!c) return;
+  c.fatalInjuries[idx] = !c.fatalInjuries[idx];
+  render(); saveState();
+}
+
+function toggleCondition(name) {
+  const c = getActive();
+  if (!c) return;
+  if (c.conditions[name]) {
+    delete c.conditions[name];
+  } else {
+    c.conditions[name] = { active: true, val: '' };
+  }
+  render(); saveState();
+}
+
+function updateCondVal(name, val) {
+  const c = getActive();
+  if (!c) return;
+  if (c.conditions[name]) c.conditions[name].val = val;
+  saveState();
+}
+
+function setGroupField(type, idx, field, value) {
+  const c = getActive();
+  if (!c) return;
+  c[type][idx][field] = value;
+  if (field === 'group') c[type][idx].abilities = {};
+  render(); saveState();
+}
+
+function toggleAbility(type, idx, key) {
+  const c = getActive();
+  if (!c) return;
+  c[type][idx].abilities[key] = !c[type][idx].abilities[key];
+  render(); saveState();
+}
+
+function renderPoints(pts, label) {
+  const color = pts.remaining < 0 ? '#FF6666' : '#A8C8E8';
+  return '<div style="margin-left:auto;display:flex;align-items:center;gap:10px">' +
+    '<span style="font-family:Cinzel,serif;font-size:10px;color:#F5DEB3;opacity:0.8;letter-spacing:1px">' + label + '</span>' +
+    '<span style="font-family:Cinzel,serif;font-size:18px;font-weight:700;color:' + color + '">' + pts.remaining +
+    '<span style="font-size:12px;opacity:0.6"> / ' + pts.total + '</span></span></div>';
+}
+
+function calcMartialPoints(c) {
+  const total = c.expertise;
+  let spent = 0;
+  c.weaponGroups.forEach(wg => {
+    if (!wg.group) return;
+    spent += 1; // buy-in
+    if (wg.tier === 'Tier 1' || wg.tier === 'Tier 2') {
+      const t1 = ABILITIES[wg.group]?.['Tier 1'] || [];
+      t1.forEach(([name]) => {
+        const key = 'Tier 1-' + name;
+        if (wg.abilities[key]) spent += name.startsWith('PASSIVE') ? 1 : 2;
+      });
+    }
+    if (wg.tier === 'Tier 2') {
+      const t2 = ABILITIES[wg.group]?.['Tier 2'] || [];
+      t2.forEach(([name]) => {
+        const key = 'Tier 2-' + name;
+        if (wg.abilities[key]) spent += name.startsWith('PASSIVE') ? 1 : 2;
+      });
+    }
+  });
+  return { total, spent, remaining: total - spent };
+}
+
+function calcSpellPoints(c) {
+  const total = c.willpower;
+  let spent = 0;
+  c.spellGroups.forEach(sg => {
+    if (!sg.group) return;
+    spent += 1; // buy-in
+    if (sg.tier === 'Tier 1' || sg.tier === 'Tier 2') {
+      const t1 = ABILITIES[sg.group]?.['Tier 1'] || [];
+      t1.forEach(([name]) => {
+        const key = 'Tier 1-' + name;
+        if (sg.abilities[key]) spent += name.startsWith('PASSIVE') ? 1 : 2;
+      });
+    }
+    if (sg.tier === 'Tier 2') {
+      const t2 = ABILITIES[sg.group]?.['Tier 2'] || [];
+      t2.forEach(([name]) => {
+        const key = 'Tier 2-' + name;
+        if (sg.abilities[key]) spent += name.startsWith('PASSIVE') ? 1 : 2;
+      });
+    }
+  });
+  return { total, spent, remaining: total - spent };
+}
+
+function calcAdventuringPoints(c) {
+  const total = c.intuition * 2;
+  let spent = 0;
+  Object.values(c.skills || {}).forEach(v => spent += (parseInt(v) || 0));
+  return { total, spent, remaining: total - spent };
+}
+
+function updateSkill(skill, value) {
+  const c = getActive();
+  if (!c) return;
+  if (!c.skills) c.skills = {};
+  c.skills[skill] = Math.max(0, Math.min(10, parseInt(value) || 0));
+  render(); saveState();
+}
+
+function addGroup(type) {
+  const c = getActive();
+  if (!c) return;
+  if (c[type].length >= 4) return;
+  c[type].push({ group: '', tier: 'Buy-in', abilities: {} });
+  render(); saveState();
+}
+
+function removeGroup(type, idx) {
+  const c = getActive();
+  if (!c) return;
+  if (c[type].length <= 1) return;
+  c[type].splice(idx, 1);
+  render(); saveState();
+}
+
+function resetGroupAbilities(type, idx) {
+  const c = getActive();
+  if (!c) return;
+  c[type][idx].abilities = {};
+  render(); saveState();
+}
+
+function toggleHybrid(key) {
+  const c = getActive();
+  if (!c) return;
+  c.hybridAbilities[key] = !c.hybridAbilities[key];
+  saveState();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+
+function render() {
+  renderTabs();
+  renderMain();
+}
+
+function renderTabs() {
+  const bar = document.getElementById('tabsBar');
+  bar.innerHTML = state.chars.map(c => `
+    <div class="tab ${c.id === state.activeId ? 'active' : ''}" onclick="switchTab(${c.id})">
+      ${c.name || 'Unnamed'}
+    </div>
+  `).join('') + `<div class="tab tab-add" onclick="addCharacter()">+</div>`;
+}
+
+function switchTab(id) {
+  state.activeId = id;
+  render();
+}
+
+function renderMain() {
+  const c = getActive();
+  const main = document.getElementById('mainContent');
+
+  if (!c) {
+    main.innerHTML = `<div class="empty-state">
+      <h2>No Characters</h2>
+      <p>Begin your legend.</p>
+      <button class="btn btn-primary" onclick="addCharacter()">Create Character</button>
+    </div>`;
+    return;
+  }
+
+  const expBar = Math.min(100, (c.exhaust / 100) * 100);
+  const expColor = c.exhaust >= 80 ? '#8B0000' : c.exhaust >= 50 ? '#8b6000' : '#2d6b2d';
+
+  main.innerHTML = `
+    <!-- IDENTITY -->
+    <div class="card">
+      <div class="card-header"><h2>Character Identity</h2></div>
+      <div class="card-body">
+        <div class="identity-grid">
+          <div class="field-group">
+            <label class="field-label">Name</label>
+            <input class="field-input" value="${c.name}" onchange="update('name',this.value);renderTabs()" placeholder="Enter name...">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Race</label>
+            <input class="field-input" value="${c.race}" onchange="update('race',this.value)" placeholder="Race...">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Level</label>
+            <select class="field-input" onchange="update('level',+this.value)">
+              ${[...Array(20)].map((_,i)=>`<option value="${i+1}" ${c.level===i+1?'selected':''}>Level ${i+1}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORE STATS -->
+    <div class="card">
+      <div class="card-header"><h2>Core Statistics</h2></div>
+      <div class="card-body">
+        <div class="stats-grid">
+          ${['expertise','willpower','intuition','initiative','armor'].map(stat => `
+            <div class="stat-box">
+              <span class="stat-label">${stat}</span>
+              <select class="stat-select" onchange="update('${stat}',+this.value);render()">
+                ${[...Array(21)].map((_,i)=>`<option value="${i}" ${c[stat]===i?'selected':''}>${i}</option>`).join('')}
+              </select>
+            </div>
+          `).join('')}
+          <div class="stat-box" style="background:${c.exhaust>=100?'rgba(139,0,0,0.2)':''}">
+            <span class="stat-label">Exhaust</span>
+            <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:${expColor};text-align:center;padding:4px 0">${c.exhaust}/100</div>
+          </div>
+        </div>
+        ${c.exhaust >= 100 ? '<div style="text-align:center;margin-top:8px;font-family:Cinzel,serif;font-size:12px;color:var(--blood);font-weight:700;letter-spacing:2px">⚔ ALL HITS ARE FATAL BLOWS ⚔</div>' : ''}
+      </div>
+    </div>
+
+    <!-- EXHAUST & FATAL INJURIES -->
+    <div class="card">
+      <div class="card-header"><h2>Exhaust Tracker & Fatal Injuries</h2></div>
+      <div class="card-body">
+        <div class="exhaust-layout">
+          <div class="exhaust-track">
+            <div class="exhaust-label-row">
+              <div>
+                <div class="exhaust-value">${c.exhaust}</div>
+                <div class="exhaust-max">of 100 Exhaust</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <input class="exhaust-input" id="exhaustAmt" type="number" value="5" min="1" max="100">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <button class="btn btn-exhaust" onclick="updateExhaust(+document.getElementById('exhaustAmt').value)">+ Exhaust</button>
+                  <button class="btn btn-reduce" onclick="updateExhaust(-document.getElementById('exhaustAmt').value)">− Reduce</button>
+                </div>
+              </div>
+            </div>
+            <div class="exhaust-bar-container">
+              <div class="exhaust-bar" style="width:${expBar}%;background:linear-gradient(90deg,#2d7d2d 0%,#2d6098 50%,#8B6914 100%);background-size:200% 100%;background-position:${expBar}% 0"></div>
+            </div>
+            <div class="exhaust-buttons">
+              ${[1,2,3,5,10,20].map(n=>`
+                <button class="btn btn-exhaust" style="font-size:10px;padding:4px 8px" style="background:#2D6A2D;color:white;border-color:#1A4A1A" onclick="updateExhaust(${n})">+${n}</button>
+              `).join('')}
+              <button class="btn btn-ghost" onclick="getActive().exhaust=0;render();saveState()">Reset</button>
+            </div>
+          </div>
+          <div class="fatal-injuries">
+            <div class="fatal-title">Fatal Injuries</div>
+            ${c.fatalInjuries.map((fi, i) => `
+              <div class="fatal-item ${fi?'active':''}" onclick="toggleFatal(${i})">
+                <div class="fatal-checkbox">${fi?'✕':''}</div>
+                <div>
+                  <div class="fatal-text">Fatal Injury ${i+1}</div>
+                  ${i===2?`<div class="fatal-death">3rd Injury = Death</div>`:''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPERTISE LADDER -->
+    <div class="card">
+      <div class="card-header"><h2>Expertise Ladder</h2></div>
+      <div class="card-body">
+        <div class="ladder-grid">
+          ${EXPERTISE_LADDER.map(l => `
+            <div class="ladder-item ${c.expertise >= l.req ? 'unlocked' : ''}">
+              <div class="ladder-req">${l.req}</div>
+              <div>
+                <span class="ladder-name">${l.name}</span>
+                <span class="ladder-desc">${l.desc}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- WILLPOWER LADDER -->
+    <div class="card">
+      <div class="card-header"><h2>Willpower Ladder</h2></div>
+      <div class="card-body">
+        <div class="ladder-grid">
+          ${WILLPOWER_LADDER.map(l => `
+            <div class="ladder-item ${c.willpower >= l.req ? 'unlocked' : ''}">
+              <div class="ladder-req">${l.req}</div>
+              <div>
+                <span class="ladder-name">${l.name}</span>
+                <span class="ladder-desc">${l.desc}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- INTUITION LADDER -->
+    <div class="card">
+      <div class="card-header"><h2>Intuition Ladder</h2></div>
+      <div class="card-body">
+        <div class="ladder-grid">
+          ${INTUITION_LADDER.map(l => `
+            <div class="ladder-item ${c.intuition >= l.req ? 'unlocked' : ''}">
+              <div class="ladder-req">${l.req}</div>
+              <div>
+                <span class="ladder-name">${l.name}</span>
+                <span class="ladder-desc">${l.desc}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- ADVENTURING SKILLS -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Adventuring Skills</h2>
+        ${renderPoints(calcAdventuringPoints(c), 'ADVENTURING POINTS')}
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          ${SKILLS.map(skill => {
+            const val = (c.skills && c.skills[skill]) || 0;
+            return `
+              <div style="background:var(--parchment-dark);border:1px solid var(--border);border-radius:2px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between">
+                <span style="font-family:Cinzel,serif;font-size:11px;font-weight:600;color:#6B4423">${skill}</span>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <button style="width:20px;height:20px;background:#8B0000;color:white;border:none;border-radius:2px;cursor:pointer;font-size:12px;line-height:1" onclick="updateSkill('${skill}',${val-1})">-</button>
+                  <span style="font-family:Cinzel,serif;font-size:16px;font-weight:700;color:#1E4D7B;min-width:20px;text-align:center">+${val}</span>
+                  <button style="width:20px;height:20px;background:#2D6A2D;color:white;border:none;border-radius:2px;cursor:pointer;font-size:12px;line-height:1" onclick="updateSkill('${skill}',${val+1})">+</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div style="margin-top:10px;padding:8px;background:rgba(30,77,123,0.08);border:1px solid var(--border);border-radius:2px">
+          <span style="font-family:Cinzel,serif;font-size:10px;font-weight:600;color:#6B4423;letter-spacing:1px">SKILL CHECK: 1d20 + Skill Bonus vs Difficulty Rating</span>
+          <span style="font-family:Crimson Text,serif;font-size:13px;color:var(--ink-mid);margin-left:12px">DR 5 Trivial · DR 8 Easy · DR 12 Moderate · DR 16 Hard · DR 20 Severe · DR 25 Legendary</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONDITIONS -->
+    <div class="card">
+      <div class="card-header"><h2>Conditions</h2></div>
+      <div class="card-body">
+        <div class="conditions-grid">
+          ${CONDITIONS.map(cond => {
+            const active = !!c.conditions[cond.name];
+            return `
+              <div class="condition-item ${active?'active':''}" onclick="toggleCondition('${cond.name}')">
+                <div class="condition-dot"></div>
+                <span class="condition-name">${cond.name}</span>
+                ${cond.hasVal && active ? `
+                  <input class="condition-input" type="number" value="${c.conditions[cond.name]?.val||''}" 
+                    onclick="event.stopPropagation()" 
+                    onchange="updateCondVal('${cond.name}',this.value);saveState()" 
+                    placeholder="X">
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- WEAPON GROUPS -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Weapon Groups</h2>
+        ${renderPoints(calcMartialPoints(c), 'MARTIAL POINTS')}
+        ${c.weaponGroups.length < 4 ? `<button class="btn btn-ghost" style="font-size:11px" onclick="addGroup('weaponGroups')">+ Add Group</button>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="groups-grid">
+          ${c.weaponGroups.map((wg, idx) => renderGroup('weaponGroups', idx, wg, WEAPON_GROUPS, idx)).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- SPELL GROUPS -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Spell Groups</h2>
+        ${renderPoints(calcSpellPoints(c), 'SPELL POINTS')}
+        ${c.spellGroups.length < 4 ? `<button class="btn btn-ghost" style="font-size:11px" onclick="addGroup('spellGroups')">+ Add Group</button>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="groups-grid">
+          ${c.spellGroups.map((sg, idx) => renderGroup('spellGroups', idx, sg, SPELL_GROUPS, idx)).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- HYBRID SKILLS -->
+    <div class="card">
+      <div class="card-header"><h2>Hybrid Skills</h2></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${renderHybridAbilities(c)}
+        </div>
+      </div>
+    </div>
+
+    <!-- EQUIPMENT -->
+    <div class="card">
+      <div class="card-header"><h2>Equipment</h2></div>
+      <div class="card-body">
+        <div class="equipment-grid">
+          <div class="equip-slot">
+            <div class="equip-slot-header">Weapon 1</div>
+            <div class="equip-slot-body">
+              <input class="field-input" style="font-size:14px" placeholder="Name..." value="${c.weapon1}" onchange="update('weapon1',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Dice (e.g. 2d6)..." value="${c.weapon1dice}" onchange="update('weapon1dice',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Tags..." value="${c.weapon1tags}" onchange="update('weapon1tags',this.value)">
+            </div>
+          </div>
+          <div class="equip-slot">
+            <div class="equip-slot-header">Weapon 2</div>
+            <div class="equip-slot-body">
+              <input class="field-input" style="font-size:14px" placeholder="Name..." value="${c.weapon2}" onchange="update('weapon2',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Dice (e.g. 3d8)..." value="${c.weapon2dice}" onchange="update('weapon2dice',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Tags..." value="${c.weapon2tags}" onchange="update('weapon2tags',this.value)">
+            </div>
+          </div>
+          <div class="equip-slot">
+            <div class="equip-slot-header">Armor / Shield</div>
+            <div class="equip-slot-body">
+              <input class="field-input" style="font-size:14px" placeholder="Armor name..." value="${c.armorName}" onchange="update('armorName',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Armor value..." value="${c.armorVal}" onchange="update('armorVal',this.value)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="card">
+      <div class="card-header"><h2>Notes</h2></div>
+      <div class="card-body">
+        <textarea class="notes-area" placeholder="Character backstory, session notes, reminders..." onchange="update('notes',this.value)">${c.notes}</textarea>
+      </div>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div class="danger-zone">
+      <button class="btn btn-danger" onclick="deleteCharacter(${c.id})">Delete Character</button>
+    </div>
+  `;
+}
+
+function renderGroup(type, idx, group, groupList, showIdx) {
+  const abilities = ABILITIES[group.group] || {};
+  const tiers = ['Buy-in', 'Tier 1', 'Tier 2'];
+
+  return `
+    <div class="group-card">
+      <div class="group-header">
+        <select class="group-select" onchange="setGroupField('${type}',${idx},'group',this.value)">
+          <option value="">— Select Group —</option>
+          ${groupList.map(g => `<option value="${g}" ${group.group===g?'selected':''}>${g}</option>`).join('')}
+        </select>
+        <div class="tier-badges">
+          ${tiers.map(t => `
+            <div class="tier-badge ${group.tier===t?'active':''}" onclick="setGroupField('${type}',${idx},'tier','${t}')">${t.replace('Tier ','T')}</div>
+          `).join('')}
+          <div class="tier-badge" style="color:#666;border-color:#666;opacity:0.6" title="Reset abilities" onclick="resetGroupAbilities('${type}',${idx})">↺</div>
+          ${showIdx > 0 ? `<div class="tier-badge" style="color:var(--blood);border-color:var(--blood)" onclick="removeGroup('${type}',${idx})">✕</div>` : ''}
+        </div>
+      </div>
+      <div class="group-abilities">
+        ${group.group ? renderGroupAbilities(type, idx, group, abilities) : '<div style="color:var(--ink-light);font-family:Crimson Text,serif;font-size:13px;padding:8px 0;font-style:italic">Select a group to see abilities</div>'}
+      </div>
+    </div>
+  `;
+}
+
+function renderGroupAbilities(type, idx, group, abilities) {
+  const tierOrder = ['Buy-in', 'Tier 1', 'Tier 2'];
+  const tierIdx = tierOrder.indexOf(group.tier);
+  let html = '';
+
+  for (let t = 0; t <= tierIdx; t++) {
+    const tier = tierOrder[t];
+    const tierAbils = abilities[tier] || [];
+    tierAbils.forEach(([name, desc]) => {
+      const key = `${tier}-${name}`;
+      const checked = !!group.abilities[key];
+      html += `
+        <div class="ability-item">
+          <div class="ability-check ${checked?'checked':''}" onclick="toggleAbility('${type}',${idx},'${key.replace(/'/g,"\\'")}')">
+            ${checked?'✓':''}
+          </div>
+          <div class="ability-text">
+            <span class="ability-name">${name}.</span> ${desc}
+          </div>
+        </div>
+      `;
+    });
+  }
+  return html || '<div style="color:var(--ink-light);font-size:13px;font-style:italic">No abilities at this tier</div>';
+}
+
+function renderHybridAbilities(c) {
+  const hybrids = [
+    { table: 'Martial Primary', req: 'Exp 4 / Will 2', name: 'Taunt', desc: 'As a Maneuver, target one enemy. That enemy must direct their next attack at you.' },
+    { table: 'Martial Primary', req: 'Exp 4 / Will 2', name: 'Field Medicine', desc: 'As a Maneuver, stabilize one Fatal Injury on an adjacent ally.' },
+    { table: 'Martial Primary', req: 'Exp 8 / Will 4', name: 'Arcane Strike', desc: 'When you hit with a weapon, use Maneuver to release spell energy — target deals 2d6 additional Exhaust.' },
+    { table: 'Martial Primary', req: 'Exp 12 / Will 6', name: 'Conjured Blade', desc: 'As a Maneuver, summon a magical weapon. Attack using your highest stat. Use purchased weapon group abilities. Lasts 2 turns.' },
+    { table: 'Martial Primary', req: 'Exp 16 / Will 8', name: 'Iron Caster', desc: 'As a Maneuver, until start of your next turn, all your spell attacks use Expertise for the attack roll.' },
+    { table: 'Magic Primary', req: 'Will 4 / Exp 2', name: 'Runic Weapon', desc: 'As a Maneuver, enchant your weapon with a spell school you are bought into. Next attack uses Willpower instead of Expertise.' },
+    { table: 'Magic Primary', req: 'Will 8 / Exp 4', name: 'Ethereal Weight', desc: 'As a Maneuver, target one or two weapons within Short range. Make them too heavy (wielder drops them) or weightless (wielder gains one additional attack on next Action).' },
+    { table: 'Magic Primary', req: 'Will 12 / Exp 6', name: 'Spell Surge', desc: 'As a Reaction, when you cast a spell that hits, immediately make a weapon attack against the same target as a free action.' },
+    { table: 'Magic Primary', req: 'Will 16 / Exp 8', name: 'Avatar', desc: 'As a Maneuver, until start of your next turn, all your weapon attacks use Willpower for the attack roll.' },
+    { table: 'True Hybrid', req: 'Exp 3 / Will 3', name: 'Cross Guard', desc: 'As a Reaction, when you are hit, add your opposite stat to your Armor against that attack. Once per battle.' },
+    { table: 'True Hybrid', req: 'Exp 6 / Will 6', name: 'Spellstrike', desc: 'As a Maneuver, your next weapon attack also applies the passive effect of one spell school you are bought into.' },
+    { table: 'True Hybrid', req: 'Exp 9 / Will 9', name: 'Arcane Deflect', desc: 'As a Reaction, when an ally within Short range is hit, redirect the attack — target prevents half the Exhaust. Once per battle.' },
+    { table: 'True Hybrid', req: 'Exp 12 / Will 12', name: 'Transcendent Strike', desc: 'As a Maneuver, make one attack using your highest stat. Deals no Exhaust and cannot be a Fatal Blow. On a hit, apply one non-passive weapon ability and one non-passive spell ability you have purchased.' },
+  ];
+
+  let lastTable = '';
+  return hybrids.map(h => {
+    let header = '';
+    if (h.table !== lastTable) {
+      lastTable = h.table;
+      header = `<div style="font-family:Cinzel,serif;font-size:10px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-top:${lastTable?'12px':'0'};padding-bottom:4px;border-bottom:1px solid var(--border)">${h.table}</div>`;
+    }
+    const key = h.name;
+    const checked = !!c.hybridAbilities[key];
+    return header + `
+      <div class="ability-item">
+        <div class="ability-check ${checked?'checked':''}" onclick="toggleHybrid('${key}')">
+          ${checked?'✓':''}
+        </div>
+        <div class="ability-text">
+          <span class="ability-name">${h.name}</span>
+          <span style="font-size:11px;color:var(--gold);margin:0 4px">(${h.req})</span>
+          ${h.desc}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── STORAGE UTILS ────────────────────────────────────────────────────────
+function clearStorage() {
+  if (!confirm('Clear all saved data and start fresh?')) return;
+  try {
+    localStorage.removeItem('ironfall-chars');
+  } catch(e) {}
+  state = { chars: [], activeId: null };
+  addCharacter(false);
+  render();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+loadState();
+</script>
+</body>
+</html>
