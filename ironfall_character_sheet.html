@@ -72,6 +72,40 @@
     opacity: 0.7;
   }
 
+  .condition-pill {
+    position: relative;
+  }
+  .condition-pill:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0D1B2A;
+    border: 1px solid var(--border);
+    color: var(--gold-light);
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    max-width: 250px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
   /* ── TABS ── */
   .tabs-bar {
     background: #091520;
@@ -240,7 +274,7 @@
   /* ── EXHAUST TRACKER ── */
   .exhaust-layout {
     display: grid;
-    grid-template-columns: 1fr 280px;
+    grid-template-columns: 2fr 1fr;
     gap: 16px;
   }
 
@@ -520,8 +554,9 @@
     background: rgba(107,68,35,0.2);
     padding: 8px 12px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
+    flex-wrap: wrap;
   }
 
   .group-select {
@@ -540,6 +575,7 @@
 
   .tier-badges {
     display: flex;
+    flex-wrap: wrap;
     gap: 4px;
   }
 
@@ -749,8 +785,8 @@ const ABILITIES = {
   },
   'Archery': {
     'Buy-in': [['Trained','Removes −4 unskilled penalty. Framework: 7 or lower = Miss | 8–16 = Hit (2d10) | 17+ = Fatal Blow']],
-    'Tier 1': [['PASSIVE: Steady Hand','Fatal Injuries only apply −3 attack penalty'],['Called Shot','On hit, apply Cripple 3 until end of target\'s next turn'],['Pinning Shot','On hit, target cannot move until their next turn']],
-    'Tier 2': [['PASSIVE: Steady Draw','Fatal Injuries apply no attack penalty, replaces Steady Hand'],['Volley','Once per battle, fire at all enemies in a zone simultaneously at −2'],['Killshot','Against targets with 60+ Exhaust, any hit is a fatal blow']]
+    'Tier 1': [['PASSIVE: Focused Hand','If the Archer did not move on their previous turn, attacks gain +2.'],['Called Shot','On hit, apply Cripple 2 until end of targets next turn'],['Pinning Shot','On hit, target cannot move until their next turn']],
+    'Tier 2': [['PASSIVE: Focused Draw','If the Archer did not move on their previous turn, attacks gain +4. Replaces Focused Hand.'],['Volley','Once per battle, fire at all enemies in a zone simultaneously at −2'],['Killshot','Against targets with 60+ Exhaust, any hit is a fatal blow']]
   },
   'Shields': {
     'Buy-in': [['Trained','Removes −4 unskilled penalty for shield bash attacks']],
@@ -773,7 +809,7 @@ const ABILITIES = {
     'Tier 2': [['PASSIVE: Immolate','Burn upgrades to Burn 4, replaces Burning Touch'],['Conflagration','When an enemy takes Burn Exhaust, use Reaction to make a Spark attack against an adjacent enemy'],['Inferno','Spark attack with fatal blow threshold of 18. On Fatal Blow, trigger Flame Burst centered on target.']]
   },
   'Frost': {
-    'Buy-in': [['Frost Bolt (free)','Deal 2d10 Exhaust at Short range. No Exhaust cost.']],
+    'Buy-in': [['Frost Bolt (free)','Make a Frost Bolt attack — deal 2d10 Exhaust at Short range. No Exhaust cost.']],
     'Tier 1': [['PASSIVE: Chill','All Frost hits apply Weaken 1 until target\'s next turn'],['Ice Lance','Frost Bolt vs all targets in a 6x3ft Line'],['Freeze','On hit, target gains Stun and Root until their next turn. Flagged for playtesting.']],
     'Tier 2': [['PASSIVE: Deep Freeze','All Frost hits apply Weaken 2, replaces Chill'],['Flash Freeze','Freeze attack vs all enemies in a 10ft Burst at Short range'],['Glacial Tomb','Frost Bolt attacks against Stunned targets have fatal blow threshold of 16']]
   },
@@ -825,13 +861,13 @@ const EXPERTISE_LADDER = [
 ];
 
 const WILLPOWER_LADDER = [
-  { req: 2, name: "First Spell", desc: "Buy-in spell cast for free" },
-  { req: 4, name: "Focused Mind", desc: "Casting cost reduced from 5 to 3 Exhaust" },
+  { req: 3, name: "Arcane Escape", desc: "Once per turn, when you cast a spell, you may teleport up to 10ft" },
   { req: 6, name: "Iron Will", desc: "Immune to Silence and Unravel" },
-  { req: 8, name: "Second Spell", desc: "As a Maneuver, cast one additional single-target spell" },
-  { req: 12, name: "Spell Mastery", desc: "Casting cost reduced from 3 to 1 Exhaust" },
-  { req: 16, name: "Third Spell", desc: "As a Maneuver, cast a second additional single-target spell" },
-  { req: 20, name: "Arcane Apex", desc: "Spell attacks gain +2 to roll" },
+  { req: 9, name: "Second Spell", desc: "As a Maneuver, cast one additional single-target spell" },
+  { req: 12, name: "Mastered", desc: "Casting cost reduced from 5 to 2 Exhaust" },
+  { req: 15, name: "Overcharge", desc: "Once per battle, double a spell's effect at no additional cost" },
+  { req: 18, name: "Third Spell", desc: "As a Maneuver, cast a second additional single-target spell" },
+  { req: 20, name: "Transcendent", desc: "Casting cost drops to 0 — magic flows freely" },
 ];
 
 const INTUITION_LADDER = [
@@ -850,23 +886,43 @@ const SKILLS = [
 ];
 
 const CONDITIONS = [
-  { name: 'Bleed', hasVal: true },
-  { name: 'Burn', hasVal: true },
-  { name: 'Poison', hasVal: true },
-  { name: 'Frostbite', hasVal: true },
-  { name: 'Wither', hasVal: true },
-  { name: 'Stagger', hasVal: false },
-  { name: 'Stun', hasVal: false },
-  { name: 'Root', hasVal: true },
-  { name: 'Slow', hasVal: false },
-  { name: 'Cripple', hasVal: true },
-  { name: 'Sunder', hasVal: true },
-  { name: 'Weaken', hasVal: true },
-  { name: 'Silence', hasVal: false },
-  { name: 'Prone', hasVal: false },
-  { name: 'Restrained', hasVal: false },
-  { name: 'Curse', hasVal: true },
+  { name: 'Bleed', hasVal: true, desc: 'Take X Exhaust at the start of each turn for 3 rounds.' },
+  { name: 'Burn', hasVal: true, desc: 'Take X Exhaust at the start of each turn for 3 rounds. Cannot be stacked.' },
+  { name: 'Poison', hasVal: true, desc: 'Take X Exhaust at the start of each turn. Persists until treated.' },
+  { name: 'Frostbite', hasVal: true, desc: 'Movement reduced by X. Stacks with Slow.' },
+  { name: 'Wither', hasVal: true, desc: 'All attack rolls reduced by X.' },
+  { name: 'Stagger', hasVal: false, desc: 'Cannot take Reactions until next turn.' },
+  { name: 'Stun', hasVal: false, desc: 'Lose your Action on your next turn.' },
+  { name: 'Root', hasVal: true, desc: 'Cannot move for X rounds.' },
+  { name: 'Slow', hasVal: false, desc: 'Movement halved this turn.' },
+  { name: 'Cripple', hasVal: true, desc: 'Attack rolls reduced by X until end of target next turn.' },
+  { name: 'Sunder', hasVal: true, desc: 'Armor reduced by X until end of battle.' },
+  { name: 'Weaken', hasVal: true, desc: 'All Exhaust dealt reduced by X.' },
+  { name: 'Silence', hasVal: false, desc: 'Cannot use Willpower-based abilities until next turn.' },
+  { name: 'Prone', hasVal: false, desc: 'Attacks against you gain +2. Must spend half movement to stand.' },
+  { name: 'Restrained', hasVal: false, desc: 'Cannot move. Break free by dealing 10+ Exhaust to the grappler in one attack.' },
+  { name: 'Curse', hasVal: true, desc: 'All Exhaust rolls suffer -X penalty for the remainder of battle.' },
+  { name: 'Unravel', hasVal: true, desc: 'Willpower reduced by X. Resets at end of battle.' },
+  { name: 'Pull', hasVal: true, desc: 'Forced movement Xft toward the source.' },
+  { name: 'Knockback', hasVal: true, desc: 'Forced movement Xft away from the source.' },
 ];
+
+
+const CULTURE_DATA = {
+  'Militant':    { movement: 35, skills: { 'Athletics': 2, 'Influence': 1 }, flavor: '+1 to Intuition checks against military targets — identifying rank, finding a commanding officer, surveying an enemy camp for weaknesses, reading formation tactics.' },
+  'Regimental':  { movement: 25, skills: { 'Influence': 2, 'Streetwise': 1 }, flavor: '+1 to Intuition checks involving laws, legal structures, civic institutions, or identifying who holds authority in an organized settlement.' },
+  'Agrarian':    { movement: 35, skills: { 'Animal Handling': 2, 'Athletics': 1 }, flavor: '+1 to Intuition checks involving weather, crops, livestock, or reading the health and mood of rural communities.' },
+  'Seafaring':   { movement: 30, skills: { 'Athletics': 2, 'Wilderness Survival': 1 }, flavor: '+1 to Intuition checks involving weather, navigation, tides, or reading the intent of crews and captains.' },
+  'Aristocratic':{ movement: 25, skills: { 'Influence': 2, 'Lore': 1 }, flavor: '+1 to Intuition checks involving noble houses, political factions, social hierarchies, or identifying who the most powerful person in a room is.' },
+  'Mercantile':  { movement: 30, skills: { 'Influence': 2, 'Streetwise': 1 }, flavor: '+1 to Intuition checks involving trade value, market prices, spotting a bad deal, or identifying smuggled or counterfeit goods.' },
+  'Arcane':      { movement: 25, skills: { 'Lore': 3 }, flavor: '+1 to Intuition checks involving magical phenomena, identifying spells or enchantments, recognizing arcane symbols, or assessing the danger of a magical effect.' },
+  'Primal':      { movement: 30, skills: { 'Wilderness Survival': 2, 'Animal Handling': 1 }, flavor: '+1 to Intuition checks involving natural environments, reading animal behavior, identifying plants or creatures, or sensing when nature is disturbed or corrupted.' },
+  'Nomadic':     { movement: 35, skills: { 'Streetwise': 1, 'Wilderness Survival': 1, 'Stealth': 1 }, flavor: '+1 to Intuition checks involving finding routes, passages, or exits — they always know the way in and the way out.' },
+  'Underworld':  { movement: 30, skills: { 'Thievery': 2, 'Streetwise': 1 }, flavor: '+1 to Intuition checks involving criminal organizations, identifying underworld contacts, spotting a setup or ambush in an urban environment, or knowing which doors to knock on in a strange city.' },
+  'Exiled':      { movement: 30, skills: { 'Stealth': 2, 'Wilderness Survival': 1 }, flavor: '+1 to Intuition checks involving being followed, identifying surveillance, sensing hostility in a crowd, or knowing when it is time to disappear.' },
+  'Secular':     { movement: 30, skills: { 'Lore': 2, 'Athletics': 1 }, flavor: '+1 to Intuition checks involving religious institutions, identifying doctrine or ritual, reading the faith or doubt in others, or navigating the politics of a religious community.' },
+  'Mixed Heritage': { movement: 30, skills: {}, flavor: 'Average movement of both cultures (rounded down). Distribute +3 skill points freely among any skills from either culture. Choose 1 flavor trait from either culture.' },
+};
 
 // ── STATE ─────────────────────────────────────────────────────────────────
 
@@ -874,6 +930,8 @@ function defaultChar(name = 'New Character') {
   return {
     id: Date.now() + Math.random(),
     name,
+    appearance: '',
+    culture: '',
     race: '',
     level: 1,
     expertise: 0,
@@ -881,6 +939,8 @@ function defaultChar(name = 'New Character') {
     intuition: 0,
     initiative: 10,
     armor: 0,
+    movement: 30,
+    cultureSkills: {},
     exhaust: 0,
     fatalInjuries: [false, false, false],
     conditions: {},
@@ -1004,6 +1064,39 @@ function setGroupField(type, idx, field, value) {
   render(); saveState();
 }
 
+function applyCulture(culture) {
+  const c = getActive();
+  if (!c) return;
+  c.culture = culture;
+  const data = CULTURE_DATA[culture];
+  if (data && culture !== 'Mixed Heritage') {
+    c.movement = data.movement;
+    // Apply skill bonuses from culture
+    if (!c.skills) c.skills = {};
+    // Reset any previously culture-applied skills to 0 first
+    // (we track which skills came from culture so we don't overwrite player-added points)
+    if (c.cultureSkills) {
+      Object.keys(c.cultureSkills).forEach(sk => {
+        c.skills[sk] = Math.max(0, (c.skills[sk] || 0) - (c.cultureSkills[sk] || 0));
+      });
+    }
+    c.cultureSkills = data.skills;
+    Object.entries(data.skills).forEach(([sk, val]) => {
+      c.skills[sk] = (c.skills[sk] || 0) + val;
+    });
+  } else if (culture === 'Mixed Heritage') {
+    // Clear previously applied culture skills
+    if (c.cultureSkills) {
+      Object.keys(c.cultureSkills).forEach(sk => {
+        c.skills[sk] = Math.max(0, (c.skills[sk] || 0) - (c.cultureSkills[sk] || 0));
+      });
+      c.cultureSkills = {};
+    }
+    c.movement = 30; // placeholder — player sets manually for mixed
+  }
+  render(); saveState();
+}
+
 function toggleAbility(type, idx, key) {
   const c = getActive();
   if (!c) return;
@@ -1024,7 +1117,7 @@ function calcMartialPoints(c) {
   let spent = 0;
   c.weaponGroups.forEach(wg => {
     if (!wg.group) return;
-    spent += 1; // buy-in
+    if (Object.keys(wg.abilities).some(k => k.startsWith('Buy-in') && wg.abilities[k])) spent += 1; // buy-in only if checked
     if (wg.tier === 'Tier 1' || wg.tier === 'Tier 2') {
       const t1 = ABILITIES[wg.group]?.['Tier 1'] || [];
       t1.forEach(([name]) => {
@@ -1048,7 +1141,7 @@ function calcSpellPoints(c) {
   let spent = 0;
   c.spellGroups.forEach(sg => {
     if (!sg.group) return;
-    spent += 1; // buy-in
+    if (Object.keys(sg.abilities).some(k => k.startsWith('Buy-in') && sg.abilities[k])) spent += 1; // buy-in only if checked
     if (sg.tier === 'Tier 1' || sg.tier === 'Tier 2') {
       const t1 = ABILITIES[sg.group]?.['Tier 1'] || [];
       t1.forEach(([name]) => {
@@ -1070,7 +1163,11 @@ function calcSpellPoints(c) {
 function calcAdventuringPoints(c) {
   const total = c.intuition * 2;
   let spent = 0;
-  Object.values(c.skills || {}).forEach(v => spent += (parseInt(v) || 0));
+  const cultureBonus = c.cultureSkills || {};
+  Object.entries(c.skills || {}).forEach(([sk, v]) => {
+    const free = cultureBonus[sk] || 0;
+    spent += Math.max(0, (parseInt(v) || 0) - free);
+  });
   return { total, spent, remaining: total - spent };
 }
 
@@ -1110,6 +1207,7 @@ function toggleHybrid(key) {
   if (!c) return;
   c.hybridAbilities[key] = !c.hybridAbilities[key];
   saveState();
+  render();
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────
@@ -1150,6 +1248,7 @@ function renderMain() {
   const expColor = c.exhaust >= 80 ? '#8B0000' : c.exhaust >= 50 ? '#8b6000' : '#2d6b2d';
 
   main.innerHTML = `
+    <div class="two-col">
     <!-- IDENTITY -->
     <div class="card">
       <div class="card-header"><h2>Character Identity</h2></div>
@@ -1160,8 +1259,17 @@ function renderMain() {
             <input class="field-input" value="${c.name}" onchange="update('name',this.value);renderTabs()" placeholder="Enter name...">
           </div>
           <div class="field-group">
-            <label class="field-label">Race</label>
-            <input class="field-input" value="${c.race}" onchange="update('race',this.value)" placeholder="Race...">
+            <label class="field-label">Physical Appearance</label>
+            <select class="field-input" onchange="update('appearance',this.value)">
+              <option value="">— Select Appearance —</option>
+              ${['Human','Elf','Dwarf','Orc','Halfling','Gnome','Half-Elf','Half-Orc','Goblin','Half-X','Drakari','Kethral','Selarim'].map(a => `<option value="${a}" ${c.appearance===a?'selected':''}>${a}</option>`).join('')}
+            </select>
+            <label class="field-label">Culture</label>
+            <select class="field-input" onchange="applyCulture(this.value)">
+              <option value="">— Select Culture —</option>
+              ${['Militant','Regimental','Agrarian','Seafaring','Aristocratic','Mercantile','Arcane','Primal','Nomadic','Underworld','Exiled','Secular','Mixed Heritage'].map(cu => `<option value="${cu}" ${c.culture===cu?'selected':''}>${cu}</option>`).join('')}
+            </select>
+
           </div>
           <div class="field-group">
             <label class="field-label">Level</label>
@@ -1186,15 +1294,35 @@ function renderMain() {
               </select>
             </div>
           `).join('')}
-          <div class="stat-box" style="background:${c.exhaust>=100?'rgba(139,0,0,0.2)':''}">
-            <span class="stat-label">Exhaust</span>
-            <div style="font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:${expColor};text-align:center;padding:4px 0">${c.exhaust}/100</div>
+          <div class="stat-box">
+            <span class="stat-label">movement</span>
+            <select class="stat-select" onchange="update('movement',+this.value)">
+              ${[20,25,30,35,40].map(v => `<option value="${v}" ${c.movement===v?'selected':''}>${v}ft</option>`).join('')}
+            </select>
           </div>
+
         </div>
-        ${c.exhaust >= 100 ? '<div style="text-align:center;margin-top:8px;font-family:Cinzel,serif;font-size:12px;color:var(--blood);font-weight:700;letter-spacing:2px">⚔ ALL HITS ARE FATAL BLOWS ⚔</div>' : ''}
+
+        ${Object.keys(c.conditions||{}).filter(k=>c.conditions[k]).length > 0 ? `
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1)">
+            ${CONDITIONS.filter(cond => c.conditions[cond.name]).map(cond => {
+              const val = cond.hasVal && c.conditions[cond.name]?.val ? ` ${c.conditions[cond.name].val}` : '';
+              const tipDesc = cond.desc.replace(/X/g, c.conditions[cond.name]?.val || 'X');
+              return `<div style="position:relative;display:inline-block">
+                <span class="condition-pill" title="${tipDesc}"
+                  style="display:inline-flex;align-items:center;gap:4px;background:#8B0000;border:1px solid #6B0000;border-radius:12px;padding:2px 8px;font-size:11px;font-family:Cinzel,serif;color:white;cursor:default">
+                  ${cond.name}${val}
+                </span>
+              </div>`;
+            }).join('')}
+          </div>
+        ` : ''}
       </div>
     </div>
+    </div>
+    </div>
 
+    <div class="two-col">
     <!-- EXHAUST & FATAL INJURIES -->
     <div class="card">
       <div class="card-header"><h2>Exhaust Tracker & Fatal Injuries</h2></div>
@@ -1240,6 +1368,84 @@ function renderMain() {
       </div>
     </div>
 
+    </div>
+
+    <!-- EQUIPMENT -->
+    <div class="card">
+      <div class="card-header"><h2>Equipment</h2></div>
+      <div class="card-body">
+        <div class="equipment-grid">
+          <div class="equip-slot">
+            <div class="equip-slot-header">Weapon 1</div>
+            <div class="equip-slot-body">
+              <input class="field-input" style="font-size:14px" placeholder="Name..." value="${c.weapon1}" onchange="update('weapon1',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Dice (e.g. 2d6)..." value="${c.weapon1dice}" onchange="update('weapon1dice',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Tags..." value="${c.weapon1tags}" onchange="update('weapon1tags',this.value)">
+            </div>
+          </div>
+          <div class="equip-slot">
+            <div class="equip-slot-header">Weapon 2</div>
+            <div class="equip-slot-body">
+              <input class="field-input" style="font-size:14px" placeholder="Name..." value="${c.weapon2}" onchange="update('weapon2',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Dice (e.g. 3d8)..." value="${c.weapon2dice}" onchange="update('weapon2dice',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Tags..." value="${c.weapon2tags}" onchange="update('weapon2tags',this.value)">
+            </div>
+          </div>
+          <div class="equip-slot">
+            <div class="equip-slot-header">Armor / Shield</div>
+            <div class="equip-slot-body">
+              <input class="field-input" style="font-size:14px" placeholder="Armor name..." value="${c.armorName}" onchange="update('armorName',this.value)">
+              <input class="field-input" style="font-size:14px" placeholder="Armor value..." value="${c.armorVal}" onchange="update('armorVal',this.value)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+
+    <div class="two-col">
+    <!-- WEAPON GROUPS -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Weapon Groups</h2>
+        ${renderPoints(calcMartialPoints(c), 'MARTIAL POINTS')}
+        ${c.weaponGroups.length < 4 ? `<button class="btn btn-ghost" style="font-size:11px" onclick="addGroup('weaponGroups')">+ Add Group</button>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="groups-grid">
+          ${c.weaponGroups.map((wg, idx) => renderGroup('weaponGroups', idx, wg, WEAPON_GROUPS, idx)).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- SPELL GROUPS -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Spell Groups</h2>
+        ${renderPoints(calcSpellPoints(c), 'SPELL POINTS')}
+        ${c.spellGroups.length < 4 ? `<button class="btn btn-ghost" style="font-size:11px" onclick="addGroup('spellGroups')">+ Add Group</button>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="groups-grid">
+          ${c.spellGroups.map((sg, idx) => renderGroup('spellGroups', idx, sg, SPELL_GROUPS, idx)).join('')}
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- HYBRID SKILLS -->
+    <div class="card">
+      <div class="card-header"><h2>Hybrid Skills</h2></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${renderHybridAbilities(c)}
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
     <!-- EXPERTISE LADDER -->
     <div class="card">
       <div class="card-header"><h2>Expertise Ladder</h2></div>
@@ -1274,6 +1480,8 @@ function renderMain() {
           `).join('')}
         </div>
       </div>
+    </div>
+    </div>
     </div>
 
     <!-- INTUITION LADDER -->
@@ -1316,11 +1524,18 @@ function renderMain() {
             `;
           }).join('')}
         </div>
+        ${c.culture && CULTURE_DATA[c.culture] ? `
+        <div style="margin-top:8px;padding:8px;background:rgba(107,68,35,0.08);border:1px solid rgba(107,68,35,0.3);border-radius:2px">
+          <span style="font-family:Cinzel,serif;font-size:10px;font-weight:600;color:#6B4423;letter-spacing:1px">${c.culture.toUpperCase()} CULTURE BONUS · </span>
+          <span style="font-family:Crimson Text,serif;font-size:13px;color:var(--ink-mid)">${CULTURE_DATA[c.culture].flavor}</span>
+        </div>` : ''}
         <div style="margin-top:10px;padding:8px;background:rgba(30,77,123,0.08);border:1px solid var(--border);border-radius:2px">
           <span style="font-family:Cinzel,serif;font-size:10px;font-weight:600;color:#6B4423;letter-spacing:1px">SKILL CHECK: 1d20 + Skill Bonus vs Difficulty Rating</span>
           <span style="font-family:Crimson Text,serif;font-size:13px;color:var(--ink-mid);margin-left:12px">DR 5 Trivial · DR 8 Easy · DR 12 Moderate · DR 16 Hard · DR 20 Severe · DR 25 Legendary</span>
         </div>
       </div>
+    </div>
+
     </div>
 
     <!-- CONDITIONS -->
@@ -1343,76 +1558,6 @@ function renderMain() {
               </div>
             `;
           }).join('')}
-        </div>
-      </div>
-    </div>
-
-    <!-- WEAPON GROUPS -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Weapon Groups</h2>
-        ${renderPoints(calcMartialPoints(c), 'MARTIAL POINTS')}
-        ${c.weaponGroups.length < 4 ? `<button class="btn btn-ghost" style="font-size:11px" onclick="addGroup('weaponGroups')">+ Add Group</button>` : ''}
-      </div>
-      <div class="card-body">
-        <div class="groups-grid">
-          ${c.weaponGroups.map((wg, idx) => renderGroup('weaponGroups', idx, wg, WEAPON_GROUPS, idx)).join('')}
-        </div>
-      </div>
-    </div>
-
-    <!-- SPELL GROUPS -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Spell Groups</h2>
-        ${renderPoints(calcSpellPoints(c), 'SPELL POINTS')}
-        ${c.spellGroups.length < 4 ? `<button class="btn btn-ghost" style="font-size:11px" onclick="addGroup('spellGroups')">+ Add Group</button>` : ''}
-      </div>
-      <div class="card-body">
-        <div class="groups-grid">
-          ${c.spellGroups.map((sg, idx) => renderGroup('spellGroups', idx, sg, SPELL_GROUPS, idx)).join('')}
-        </div>
-      </div>
-    </div>
-
-    <!-- HYBRID SKILLS -->
-    <div class="card">
-      <div class="card-header"><h2>Hybrid Skills</h2></div>
-      <div class="card-body">
-        <div style="display:flex;flex-direction:column;gap:6px">
-          ${renderHybridAbilities(c)}
-        </div>
-      </div>
-    </div>
-
-    <!-- EQUIPMENT -->
-    <div class="card">
-      <div class="card-header"><h2>Equipment</h2></div>
-      <div class="card-body">
-        <div class="equipment-grid">
-          <div class="equip-slot">
-            <div class="equip-slot-header">Weapon 1</div>
-            <div class="equip-slot-body">
-              <input class="field-input" style="font-size:14px" placeholder="Name..." value="${c.weapon1}" onchange="update('weapon1',this.value)">
-              <input class="field-input" style="font-size:14px" placeholder="Dice (e.g. 2d6)..." value="${c.weapon1dice}" onchange="update('weapon1dice',this.value)">
-              <input class="field-input" style="font-size:14px" placeholder="Tags..." value="${c.weapon1tags}" onchange="update('weapon1tags',this.value)">
-            </div>
-          </div>
-          <div class="equip-slot">
-            <div class="equip-slot-header">Weapon 2</div>
-            <div class="equip-slot-body">
-              <input class="field-input" style="font-size:14px" placeholder="Name..." value="${c.weapon2}" onchange="update('weapon2',this.value)">
-              <input class="field-input" style="font-size:14px" placeholder="Dice (e.g. 3d8)..." value="${c.weapon2dice}" onchange="update('weapon2dice',this.value)">
-              <input class="field-input" style="font-size:14px" placeholder="Tags..." value="${c.weapon2tags}" onchange="update('weapon2tags',this.value)">
-            </div>
-          </div>
-          <div class="equip-slot">
-            <div class="equip-slot-header">Armor / Shield</div>
-            <div class="equip-slot-body">
-              <input class="field-input" style="font-size:14px" placeholder="Armor name..." value="${c.armorName}" onchange="update('armorName',this.value)">
-              <input class="field-input" style="font-size:14px" placeholder="Armor value..." value="${c.armorVal}" onchange="update('armorVal',this.value)">
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -1448,7 +1593,7 @@ function renderGroup(type, idx, group, groupList, showIdx) {
             <div class="tier-badge ${group.tier===t?'active':''}" onclick="setGroupField('${type}',${idx},'tier','${t}')">${t.replace('Tier ','T')}</div>
           `).join('')}
           <div class="tier-badge" style="color:#666;border-color:#666;opacity:0.6" title="Reset abilities" onclick="resetGroupAbilities('${type}',${idx})">↺</div>
-          ${showIdx > 0 ? `<div class="tier-badge" style="color:var(--blood);border-color:var(--blood)" onclick="removeGroup('${type}',${idx})">✕</div>` : ''}
+          <div class="tier-badge" style="color:var(--blood);border-color:var(--blood)" title="Remove group" onclick="removeGroup('${type}',${idx})">✕</div>
         </div>
       </div>
       <div class="group-abilities">
@@ -1486,19 +1631,19 @@ function renderGroupAbilities(type, idx, group, abilities) {
 
 function renderHybridAbilities(c) {
   const hybrids = [
-    { table: 'Martial Primary', req: 'Exp 4 / Will 2', name: 'Taunt', desc: 'As a Maneuver, target one enemy. That enemy must direct their next attack at you.' },
-    { table: 'Martial Primary', req: 'Exp 4 / Will 2', name: 'Field Medicine', desc: 'As a Maneuver, stabilize one Fatal Injury on an adjacent ally.' },
-    { table: 'Martial Primary', req: 'Exp 8 / Will 4', name: 'Arcane Strike', desc: 'When you hit with a weapon, use Maneuver to release spell energy — target deals 2d6 additional Exhaust.' },
-    { table: 'Martial Primary', req: 'Exp 12 / Will 6', name: 'Conjured Blade', desc: 'As a Maneuver, summon a magical weapon. Attack using your highest stat. Use purchased weapon group abilities. Lasts 2 turns.' },
-    { table: 'Martial Primary', req: 'Exp 16 / Will 8', name: 'Iron Caster', desc: 'As a Maneuver, until start of your next turn, all your spell attacks use Expertise for the attack roll.' },
-    { table: 'Magic Primary', req: 'Will 4 / Exp 2', name: 'Runic Weapon', desc: 'As a Maneuver, enchant your weapon with a spell school you are bought into. Next attack uses Willpower instead of Expertise.' },
-    { table: 'Magic Primary', req: 'Will 8 / Exp 4', name: 'Ethereal Weight', desc: 'As a Maneuver, target one or two weapons within Short range. Make them too heavy (wielder drops them) or weightless (wielder gains one additional attack on next Action).' },
-    { table: 'Magic Primary', req: 'Will 12 / Exp 6', name: 'Spell Surge', desc: 'As a Reaction, when you cast a spell that hits, immediately make a weapon attack against the same target as a free action.' },
-    { table: 'Magic Primary', req: 'Will 16 / Exp 8', name: 'Avatar', desc: 'As a Maneuver, until start of your next turn, all your weapon attacks use Willpower for the attack roll.' },
-    { table: 'True Hybrid', req: 'Exp 3 / Will 3', name: 'Cross Guard', desc: 'As a Reaction, when you are hit, add your opposite stat to your Armor against that attack. Once per battle.' },
-    { table: 'True Hybrid', req: 'Exp 6 / Will 6', name: 'Spellstrike', desc: 'As a Maneuver, your next weapon attack also applies the passive effect of one spell school you are bought into.' },
-    { table: 'True Hybrid', req: 'Exp 9 / Will 9', name: 'Arcane Deflect', desc: 'As a Reaction, when an ally within Short range is hit, redirect the attack — target prevents half the Exhaust. Once per battle.' },
-    { table: 'True Hybrid', req: 'Exp 12 / Will 12', name: 'Transcendent Strike', desc: 'As a Maneuver, make one attack using your highest stat. Deals no Exhaust and cannot be a Fatal Blow. On a hit, apply one non-passive weapon ability and one non-passive spell ability you have purchased.' },
+    { table: 'Martial Primary', req: 'Exp 4 / Will 2', cost: '1pt', name: 'Taunt', desc: 'As a Maneuver, target one enemy. That enemy must direct their next attack at you.' },
+    { table: 'Martial Primary', req: 'Exp 4 / Will 2', cost: '1pt', name: 'Field Medicine', desc: 'As a Maneuver, stabilize one Fatal Injury on an adjacent ally.' },
+    { table: 'Martial Primary', req: 'Exp 8 / Will 4', cost: '1pt', name: 'Arcane Strike', desc: 'When you hit with a weapon, use Maneuver to release spell energy — target deals 2d6 additional Exhaust.' },
+    { table: 'Martial Primary', req: 'Exp 12 / Will 6', cost: '1pt', name: 'Conjured Blade', desc: 'As a Maneuver, summon a magical weapon. Attack using your highest stat. Use purchased weapon group abilities. Lasts 2 turns.' },
+    { table: 'Martial Primary', req: 'Exp 16 / Will 8', cost: '1pt', name: 'Iron Caster', desc: 'As a Maneuver, until start of your next turn, all your spell attacks use Expertise for the attack roll.' },
+    { table: 'Magic Primary', req: 'Will 4 / Exp 2', cost: '1pt', name: 'Runic Weapon', desc: 'As a Maneuver, enchant your weapon with a spell school you are bought into. Next attack uses Willpower instead of Expertise.' },
+    { table: 'Magic Primary', req: 'Will 8 / Exp 4', cost: '1pt', name: 'Ethereal Weight', desc: 'As a Maneuver, target one or two weapons within Short range. Make them too heavy (wielder drops them) or weightless (wielder gains one additional attack on next Action).' },
+    { table: 'Magic Primary', req: 'Will 12 / Exp 6', cost: '1pt', name: 'Spell Surge', desc: 'As a Reaction, when you cast a spell that hits, immediately make a weapon attack against the same target as a free action.' },
+    { table: 'Magic Primary', req: 'Will 16 / Exp 8', cost: '1pt', name: 'Avatar', desc: 'As a Maneuver, until start of your next turn, all your weapon attacks use Willpower for the attack roll.' },
+    { table: 'True Hybrid', req: 'Exp 3 / Will 3', cost: '1pt', name: 'Cross Guard', desc: 'As a Reaction, when you are hit, add your opposite stat to your Armor against that attack. Once per battle.' },
+    { table: 'True Hybrid', req: 'Exp 6 / Will 6', cost: '1pt', name: 'Spellstrike', desc: 'As a Maneuver, your next weapon attack also applies the passive effect of one spell school you are bought into.' },
+    { table: 'True Hybrid', req: 'Exp 9 / Will 9', cost: '1pt', name: 'Arcane Deflect', desc: 'As a Reaction, when an ally within Short range is hit, redirect the attack — target prevents half the Exhaust. Once per battle.' },
+    { table: 'True Hybrid', req: 'Exp 12 / Will 12', cost: '1pt', name: 'Transcendent Strike', desc: 'As a Maneuver, make one attack using your highest stat. Deals no Exhaust and cannot be a Fatal Blow. On a hit, apply one non-passive weapon ability and one non-passive spell ability you have purchased.' },
   ];
 
   let lastTable = '';
@@ -1518,6 +1663,7 @@ function renderHybridAbilities(c) {
         <div class="ability-text">
           <span class="ability-name">${h.name}</span>
           <span style="font-size:11px;color:var(--gold);margin:0 4px">(${h.req})</span>
+          <span style="font-size:11px;color:var(--ink-light);margin-right:4px">${h.cost}</span>
           ${h.desc}
         </div>
       </div>
@@ -1541,3 +1687,4 @@ loadState();
 </script>
 </body>
 </html>
+
