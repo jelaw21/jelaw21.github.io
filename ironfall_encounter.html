@@ -37,6 +37,7 @@
     font-family: 'Source Sans 3', sans-serif;
     color: var(--ink);
     height: 100vh;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -122,17 +123,22 @@
     display: flex;
     flex: 1;
     overflow: hidden;
+    min-height: 0;
+    height: 0;
   }
 
   /* ── CANVAS ── */
   .canvas {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     position: relative;
+    min-height: 0;
+    height: 100%;
+    align-content: flex-start;
   }
 
   .canvas-empty {
@@ -183,6 +189,7 @@
     overflow: hidden;
     transition: all 0.2s;
     position: relative;
+    flex-shrink: 0;
   }
 
   .encounter-card.dead {
@@ -997,6 +1004,25 @@ const ABILITY_DESCRIPTIONS = {
   "Last Stand": "When this monster takes its first Fatal Injury, all Orcs in the encounter gain +2 to their next attack roll",
   "Taunt": "As a Maneuver, target one enemy. That enemy must direct their next attack at you.",
   "Field Medicine": "As a Maneuver, stabilize one Fatal Injury on an adjacent ally.",
+  "Hide in Bushes": "As a Maneuver, gain Partial Cover until start of next turn.",
+  "Focused Hand": "If the Archer did not move on their previous turn, attacks gain +2.",
+  "Static Discharge": "Once per battle, as an Action, all enemies within 10ft Aura take 3d6 Exhaust.",
+  "Runic Weapon": "As a Maneuver, enchant weapon with a spell school. Next attack uses Willpower instead of Expertise.",
+  "Five Handaxes": "Carries 5 handaxes. Track usage. Each can be thrown using Quick Draw.",
+  "Hide In Shadows": "As a Maneuver, gain Partial Cover until start of next turn.",
+  "Sucker Punch": "If the Cutthroat has Partial or Full Cover, attacks gain +2.",
+  "Gut Feeling": "When targeted by an attack, use Reaction to Hide In Shadows if Maneuver available.",
+  "Pistol Whip": "When enemy moves adjacent, use Reaction to strike. On hit, target gains Knockback 10.",
+  "Immovable": "Cannot be Knocked Back, Rooted, or Pushed by any ability.",
+  "Blur": "All attack rolls against you suffer -2.",
+  "Mirror Image": "As a Maneuver, create a decoy. Next attack against you hits the image instead.",
+  "Phantom Step": "As a Maneuver, move up to 15ft without triggering Reactions.",
+  "Counter": "When an attacker misses the Trickster, use Reaction to make an immediate attack.",
+  "Lead from Behind": "As a Reaction, when targeted by an attack, redirect it to an adjacent Bandit.",
+  "Not My Problem": "Once per battle, when taking a Fatal Injury, force an adjacent Bandit to take it instead. Bandit dies instantly.",
+  "Dirty Fighter": "Once per battle, make attack roll. On hit, target suffers -2 to all attack rolls. On Fatal Blow, -4 instead.",
+  "Ill Handle This Myself": "When the last Bandit falls, Captain gains +2 to attack rolls and movement increases to 40ft.",
+  "Flicker": "As a Maneuver, next attack against you suffers -3."
 };
 
 const CONDITIONS_HAVE_VAL = ['Bleed','Burn','Poison','Frostbite','Wither','Root','Cripple','Sunder','Weaken','Curse'];
@@ -1151,10 +1177,9 @@ function buildCard(m) {
       <div style="font-family:Cinzel,serif;font-size:9px;font-weight:600;color:var(--ink-mid);letter-spacing:1px;margin-bottom:3px">ABILITIES</div>
       <div style="display:flex;flex-wrap:wrap;gap:3px" id="abilities-${m.id}">
         ${(m.abilities||[]).map(a => {
-          const desc = ABILITY_DESCRIPTIONS[a] || '';
-          return '<span style="font-family:Source Sans 3,sans-serif;font-size:10px;font-weight:600;padding:2px 7px;background:rgba(30,77,123,0.08);border:1px solid rgba(30,77,123,0.2);border-radius:3px;color:var(--blue);cursor:pointer;user-select:none;transition:all 0.15s" ' +
-            'onclick="toggleAbilityDesc(this,\'' + a.replace(/'/g,"\'") + '\',' + m.id + ')" ' +
-            'title="' + desc.replace(/"/g,'&quot;') + '">' + a + '</span>';
+          const desc = (ABILITY_DESCRIPTIONS[a] || '').replace(/"/g,'&quot;');
+          const safeName = a.replace(/"/g,'&quot;');
+          return `<span style="font-family:Source Sans 3,sans-serif;font-size:10px;font-weight:600;padding:2px 7px;background:rgba(30,77,123,0.08);border:1px solid rgba(30,77,123,0.2);border-radius:3px;color:var(--blue);cursor:pointer;user-select:none;transition:all 0.15s" data-ability="${safeName}" data-mid="${m.id}" onclick="toggleAbilityDescSafe(this)" title="${desc}">${a}</span>`;
         }).join('')}
       </div>
       <div id="ability-desc-${m.id}" style="display:none;margin-top:6px;padding:6px 8px;background:rgba(30,77,123,0.06);border:1px solid rgba(30,77,123,0.15);border-radius:3px;font-family:Crimson Text,serif;font-size:13px;color:var(--ink-mid);font-style:italic;line-height:1.4"></div>
